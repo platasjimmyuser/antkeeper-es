@@ -5,7 +5,35 @@ document.addEventListener("DOMContentLoaded", () => {
     boton.addEventListener("click", () => {
 
         const colonia = Storage.obtenerDemo();
+      const mostrarDiario = () => {
 
+    document.querySelector("main").innerHTML = `
+
+    <section class="tarjeta">
+
+        <h2>📖 Diario - ${colonia.nombre}</h2>
+
+        ${colonia.diario.map(entrada => `
+
+            <article>
+                <h3>${entrada.fecha} - ${entrada.titulo}</h3>
+                <p>${entrada.texto}</p>
+            </article>
+
+            <hr>
+
+        `).join("")}
+
+        <button onclick="location.reload()">
+            ⬅ Volver
+        </button>
+
+    </section>
+
+    `;
+
+};
+      
         document.querySelector("main").innerHTML = `
 
         <section class="tarjeta">
@@ -36,8 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 📷 Fotos
             </button>
 
-            <button onclick="alert('Próximamente: Diario')">
-                📖 Diario
+            <button id="btnDiario">
+                 📖 Diario
             </button>
 
             <button onclick="alert('Próximamente: Evolución')">
@@ -50,8 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         </section>
 
-        `;
+                `;
 
+        document
+            .getElementById("btnDiario")
+            .addEventListener("click", mostrarDiario);
     });
 
 });
