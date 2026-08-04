@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ece8dd;
+    color: #2d2d2d;
+}
+
+.cabecera {
+    background: #556b2f;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.cabecera h1 {
+    font-size: 30px;
+}
+
+.cabecera p {
+    margin-top: 8px;
+    opacity: 0.9;
+}
+
+main {
+    padding: 15px;
+}
+
+.tarjeta {
+    background: white;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+.tarjeta h2 {
+    margin-bottom: 12px;
+    color: #556b2f;
+}
+
+.tarjeta p {
+    margin: 8px 0;
+    font-size: 17px;
+}
+
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #556b2f;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+button:active {
+    transform: scale(0.98);
+}
