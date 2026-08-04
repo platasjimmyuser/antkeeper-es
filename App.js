@@ -4,29 +4,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     boton.addEventListener("click", () => {
 
+        const colonia = Storage.obtenerDemo();
+
         document.querySelector("main").innerHTML = `
 
         <section class="tarjeta">
 
-            <h2>🐜 Messor barbarus DEMO</h2>
+            <h2>🐜 ${colonia.nombre}</h2>
 
-            <p><strong>Estado:</strong> 🟢 Reina viva</p>
+            <p><strong>Estado:</strong> ${colonia.reina.estado}</p>
 
-            <p><strong>Especie:</strong> Messor barbarus</p>
+            <p><strong>Especie:</strong> ${colonia.especie}</p>
 
-            <p><strong>Fecha de captura:</strong> 15/10/2025</p>
+            <p><strong>Fecha de captura:</strong> ${colonia.reina.fechaCaptura}</p>
 
             <hr><br>
 
             <h3>Población</h3>
 
-            <p>🥚 Huevos: 120</p>
+            <p>🥚 Huevos: ${colonia.poblacion.huevos}</p>
 
-            <p>🐛 Larvas: 45</p>
+            <p>🐛 Larvas: ${colonia.poblacion.larvas}</p>
 
-            <p>🟤 Pupas: 30</p>
+            <p>🟤 Pupas: ${colonia.poblacion.pupas}</p>
 
-            <p>🐜 Obreras: 86</p>
+            <p>🐜 Obreras: ${colonia.poblacion.obreras}</p>
 
             <br>
 
