@@ -42,7 +42,29 @@ const Storage = {
         fotos: [],
         alimentacion: [],
         parametros: {},
-        camposPersonalizados: {}
+        camposPersonalizados: {},
+
+foto: "",
+
+revision: {
+    ultima: "05/08/2026",
+    notas: "Revisión general de la colonia."
+},
+
+alimentacion: {
+    ultima: "03/08/2026",
+    alimento: "Semillas y proteína"
+},
+
+parametros: {
+    temperatura: "25,3 ºC",
+    humedad: "62 %"
+},
+
+avisos: [
+    "🟢 Colonia estable",
+    "🍽 Revisar alimentación próximamente"
+]
     },
 
     obtenerDemo() {
