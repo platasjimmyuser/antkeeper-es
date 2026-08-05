@@ -44,7 +44,10 @@ const Storage = {
         parametros: {},
         camposPersonalizados: {},
 
-foto: "",
+foto: {
+    portada: "../Assets/Images/messor-demo.jpg",
+    galeria: []
+},
 
 revision: {
     ultima: "05/08/2026",
@@ -70,5 +73,12 @@ avisos: [
     obtenerDemo() {
         return this.coloniaDemo;
     }
-
+.foto-colonia {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 15px;
 };

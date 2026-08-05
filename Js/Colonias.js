@@ -5,7 +5,10 @@ function mostrarColoniaDemo() {
     document.getElementById("colonia").innerHTML = `
 
     <section class="tarjeta">
-
+<img 
+    src="${colonia.foto.portada}" 
+    alt="${colonia.nombre}"
+    class="foto-colonia">
         <h2>🐜 ${colonia.nombre}</h2>
 
         <p><strong>${colonia.reina.estado}</strong></p>
@@ -70,9 +73,9 @@ function mostrarColoniaDemo() {
 
         <h3>🛠 Módulos</h3>
 
-        <button>
-            📷 Fotos
-        </button>
+        <button id="btnFotos">
+           📷 Fotos
+       </button>
 
         <button id="btnDiario">
             📖 Diario
@@ -141,5 +144,50 @@ function mostrarColoniaDemo() {
             `;
 
         });
+    document
+        .getElementById("btnFotos")
+        .addEventListener("click", () => {
 
+            document.getElementById("colonia").innerHTML = `
+
+            <section class="tarjeta">
+
+                <h2>📷 Fotos - ${colonia.nombre}</h2>
+
+
+                <img 
+                    src="${colonia.foto.portada}"
+                    alt="${colonia.nombre}"
+                    class="foto-colonia">
+
+
+                <h3>🖼️ Galería</h3>
+
+
+                ${
+                    colonia.foto.galeria.length === 0
+                    ? "<p>No hay fotos todavía.</p>"
+                    : colonia.foto.galeria.map(foto => `
+                    
+                        <img 
+                        src="${foto}"
+                        class="foto-colonia">
+
+                    `).join("")
+                }
+
+
+                <br><br>
+
+
+                <button onclick="mostrarColoniaDemo()">
+                    ⬅ Volver a colonia
+                </button>
+
+
+            </section>
+
+            `;
+
+        });
 }
