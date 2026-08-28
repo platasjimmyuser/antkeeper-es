@@ -1,76 +1,453 @@
+/* =========================
+   ANTKEEPER ES
+   ESTILO GENERAL APP
+========================= */
+
+
 * {
-    margin: 0;
-    padding: 0;
+
     box-sizing: border-box;
+
 }
+
+
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #ece8dd;
-    color: #2d2d2d;
+
+
+    margin:0;
+
+    min-height:100vh;
+
+    background:#dfe8d5;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    color:#333;
+
+    padding-bottom:90px;
+
+
 }
+
+
+
+/* =========================
+   CABECERA
+========================= */
+
 
 .cabecera {
-    background: #556b2f;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
+
+
+    background:#5A6B3C;
+
+    color:white;
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:0 0 25px 25px;
+
+
 }
+
 
 .cabecera h1 {
-    font-size: 30px;
+
+
+    margin:0;
+
+    font-size:28px;
+
+
 }
+
 
 .cabecera p {
-    margin-top: 8px;
-    opacity: 0.9;
+
+
+    margin:8px 0 0;
+
 }
+
+
+
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
 
 main {
-    padding: 15px;
+
+
+    padding:15px;
+
+
 }
+
+
+
+/* =========================
+   TARJETAS
+========================= */
+
 
 .tarjeta {
-    background: white;
-    border-radius: 18px;
-    padding: 18px;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+
+
 }
+
+
 
 .tarjeta h2 {
-    margin-bottom: 12px;
-    color: #556b2f;
+
+
+    margin-top:0;
+
+    color:#5A6B3C;
+
+
 }
 
-.tarjeta p {
-    margin: 8px 0;
-    font-size: 17px;
+
+
+/* =========================
+   ESCRITORIO / WIDGETS
+========================= */
+
+
+.resumen-datos {
+
+
+    display:flex;
+
+    gap:10px;
+
+    justify-content:space-between;
+
+
 }
+
+
+
+.widget-resumen {
+
+
+    flex:1;
+
+    background:#edf3e6;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+
+}
+
+
+
+.widget-resumen strong {
+
+
+    display:block;
+
+    font-size:28px;
+
+    color:#5A6B3C;
+
+
+}
+
+
+
+/* =========================
+   COLONIAS
+========================= */
+
+
+.colonia-card {
+
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
+    background:#f7f7f7;
+
+    padding:15px;
+
+    border-radius:18px;
+
+    margin-bottom:12px;
+
+    cursor:pointer;
+
+
+}
+
+
+
+.colonia-card:active {
+
+
+    transform:scale(.98);
+
+
+}
+
+
+
+.mini-foto {
+
+
+    width:70px;
+
+    height:70px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+
+}
+
+
+
+/* =========================
+   AVISOS
+========================= */
+
+
+.aviso {
+
+
+    padding:15px;
+
+    border-radius:15px;
+
+    margin-bottom:12px;
+
+    cursor:pointer;
+
+
+}
+
+
+
+.aviso-amarillo {
+
+
+    background:#fff3cd;
+
+    border-left:8px solid #f9a825;
+
+
+}
+
+
+
+.aviso-rojo {
+
+
+    background:#ffd6d6;
+
+    border-left:8px solid #c62828;
+
+
+}
+
+
+
+.aviso-verde {
+
+
+    background:#d9f7df;
+
+    border-left:8px solid #2e7d32;
+
+
+}
+
+
+
+/* =========================
+   FORMULARIOS
+========================= */
+
+
+input,
+select {
+
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    border:1px solid #ccc;
+
+    font-size:16px;
+
+
+}
+
+
+
+label {
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+
+/* =========================
+   BOTONES
+========================= */
+
 
 button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: #556b2f;
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
+
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 18px;
+
+    margin:5px;
+
+    background:#5A6B3C;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+
 }
 
+
+
 button:active {
-    transform: scale(0.98);
+
+
+    transform:scale(.96);
+
+
 }
+
+
+
+/* =========================
+   BARRA INFERIOR FIJA
+========================= */
+
+
+.barra-navegacion {
+
+
+    position:fixed;
+
+    bottom:0;
+
+    left:0;
+
+    right:0;
+
+    height:75px;
+
+    background:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+    box-shadow:0 -3px 12px rgba(0,0,0,.15);
+
+    z-index:100;
+
+
+}
+
+
+
+.barra-navegacion button {
+
+
+    flex:1;
+
+    max-width:100px;
+
+    background:#5A6B3C;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px;
+
+}
+
+
+
+.barra-navegacion span {
+
+
+    font-size:12px;
+
+
+}
+
+
+
+/* =========================
+   FOTO FORMULARIO
+========================= */
+
+
 .foto-colonia {
-    width: 100%;
-    max-width: 300px;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-    margin: 0 auto 20px;
-    border-radius: 15px;
+
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:20px;
+
+    object-fit:cover;
+
+
 }

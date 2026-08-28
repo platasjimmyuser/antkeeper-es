@@ -1,194 +1,983 @@
 const Storage = {
 
-    coloniaDemo: {
+clave: "antkeeper_datos",
+
+datos: {
+    colonias: []
+},
+
+
+// ==========================================
+// INICIAR
+// ==========================================
+
+iniciar() {
+
+    try {
+
+        const guardado =
+            localStorage.getItem(this.clave);
+
+        if (guardado) {
+
+            const datos =
+                JSON.parse(guardado);
+
+            if (
+                datos &&
+                Array.isArray(datos.colonias)
+            ) {
+
+                this.datos = datos;
+
+            } else {
+
+                this.datos = {
+                    colonias: []
+                };
+
+            }
+
+        } else {
+
+            this.datos = {
+                colonias: []
+            };
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error iniciando Storage:",
+            error
+        );
+
+        this.datos = {
+            colonias: []
+        };
+
+    }
+
+
+    // Crear DEMO solamente si no existe ninguna colonia
+
+    if (this.datos.colonias.length === 0) {
+
+        this.crearDemo();
+
+    }
+
+},
+
+
+// ==========================================
+// GUARDAR
+// ==========================================
+
+guardar() {
+
+    try {
+
+        localStorage.setItem(
+            this.clave,
+            JSON.stringify(this.datos)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando los datos:",
+            error
+        );
+
+    }
+
+},
+
+
+// ==========================================
+// CREAR COLONIA DEMO
+// ==========================================
+
+crearDemo() {
+
+    const demo = {
+
         id: "demo-001",
 
         nombre: "Messor barbarus DEMO",
 
         especie: "Messor barbarus",
 
+        foto: {
+
+            portada:
+                "Assets/Images/messor-demo.jpg",
+
+            galeria: []
+
+        },
+
         reina: {
+
             estado: "🟢 Reina viva",
+
             fechaCaptura: "15/10/2025"
+
         },
 
         poblacion: {
+
             huevos: 120,
+
             larvas: 45,
+
             pupas: 30,
+
             obreras: 86
+
         },
 
         diario: [
+
             {
+
                 fecha: "15/10/2025",
+
                 titulo: "Captura de la reina",
-                texto: "Reina Messor barbarus capturada. Inicio de colonia DEMO."
+
+                texto:
+                    "Reina Messor barbarus capturada. Inicio de colonia DEMO."
+
             },
+
             {
+
                 fecha: "20/10/2025",
+
                 titulo: "Primeros huevos",
-                texto: "La reina ha comenzado la puesta."
+
+                texto:
+                    "La reina ha comenzado la puesta."
+
             },
+
             {
+
                 fecha: "05/11/2025",
+
                 titulo: "Primeras larvas",
-                texto: "Aparecen las primeras larvas de la colonia."
+
+                texto:
+                    "Aparecen las primeras larvas de la colonia."
+
             },
+
             {
+
                 fecha: "01/12/2025",
+
                 titulo: "Primeras obreras",
-                texto: "Nacen las primeras obreras de la colonia."
+
+                texto:
+                    "Nacen las primeras obreras de la colonia."
+
             }
+
         ],
 
         revisiones: [],
 
-        fotos: [],
+        revision: {
 
-        foto: {
-            portada: "../Assets/Images/messor-demo.jpg",
-            galeria: []
+            ultima: "05/08/2026",
+
+            notas:
+                "Revisión general de la colonia."
+
         },
 
         alimentacion: {
+
             ultima: "03/08/2026",
-            alimento: "Semillas y proteína"
+
+            alimento:
+                "Semillas y proteína"
+
+        },
+
+        agua: {
+
+            ultima: "20/08/2026"
+
         },
 
         parametros: {
+
             temperatura: "25,3 ºC",
+
             humedad: "62 %"
+
         },
 
-        camposPersonalizados: {},
+        configuracion: {
 
-        avisos: [
-            "🟢 Colonia estable",
-            "🍽 Revisar alimentación próximamente"
-        ],
+            diasRevision: 15,
 
-        revision: {
-            ultima: "05/08/2026",
-            notas: "Revisión general de la colonia."
-        }
-    },
+            diasAlimentacion: 7,
 
+            diasAgua: 3
 
-    obtenerDemo() {
-        return this.coloniaDemo;
-    },
+        },
+
+        avisos: [],
+
+        archivada: false
+
+    };
 
 
-    guardarRevision(colonia, datos) {
+    this.datos.colonias.push(demo);
 
-        const fecha = datos.fecha;
+    this.guardar();
 
-        // 1. Actualizar población
-        colonia.poblacion.huevos = datos.huevos;
-        colonia.poblacion.larvas = datos.larvas;
-        colonia.poblacion.pupas = datos.pupas;
-        colonia.poblacion.obreras = datos.obreras;
+},
 
 
-        // 2. Actualizar estado de la reina
-        colonia.reina.estado = datos.estadoReina;
+// ==========================================
+// OBTENER COLONIAS ACTIVAS
+// ==========================================
+
+obtenerColonias() {
+
+    return this.datos.colonias.filter(
+        colonia => !colonia.archivada
+    );
+
+},
 
 
-        // 3. Actualizar fecha de última revisión
-        colonia.revision.ultima = fecha;
+// ==========================================
+// OBTENER COLONIAS ARCHIVADAS
+// ==========================================
+
+obtenerColoniasArchivadas() {
+
+    return this.datos.colonias.filter(
+        colonia => colonia.archivada
+    );
+
+},
 
 
-        // 4. Actualizar notas de la revisión
-        colonia.revision.notas = datos.notas;
+// ==========================================
+// OBTENER COLONIA POR ID
+// ==========================================
+
+obtenerColoniaPorId(id) {
+
+    return this.datos.colonias.find(
+        colonia => colonia.id === id
+    );
+
+},
 
 
-        // 5. Crear objeto de revisión
-        const nuevaRevision = {
-            fecha: fecha,
-            estadoReina: datos.estadoReina,
-            huevos: datos.huevos,
-            larvas: datos.larvas,
-            pupas: datos.pupas,
-            obreras: datos.obreras,
-            notas: datos.notas
-        };
+// ==========================================
+// AÑADIR COLONIA
+// ==========================================
+
+agregarColonia(colonia) {
+
+    this.datos.colonias.push(colonia);
+
+    this.guardar();
+
+    return colonia;
+
+},
 
 
-        // 6. Añadir al historial
-        if (!Array.isArray(colonia.revisiones)) {
-            colonia.revisiones = [];
-        }
+// ==========================================
+// ARCHIVAR
+// ==========================================
 
-        colonia.revisiones.push(nuevaRevision);
+archivarColonia(id) {
 
+    const colonia =
+        this.obtenerColoniaPorId(id);
 
-        // 7. Crear entrada automática en el diario
-        const nuevaEntrada = {
-            fecha: fecha,
-            titulo: "Revisión de la colonia",
-            texto:
-                `Revisión realizada. ` +
-                `Huevos: ${datos.huevos}. ` +
-                `Larvas: ${datos.larvas}. ` +
-                `Pupas: ${datos.pupas}. ` +
-                `Obreras: ${datos.obreras}. ` +
-                `Estado de la reina: ${datos.estadoReina}.` +
-                (datos.notas
-                    ? ` Notas: ${datos.notas}`
-                    : "")
-        };
+    if (!colonia) {
 
+        return false;
 
-        colonia.diario.push(nuevaEntrada);
+    }
+
+    colonia.archivada = true;
+
+    this.guardar();
+
+    return true;
+
+},
 
 
-        // 8. Guardar datos en localStorage
-        try {
+// ==========================================
+// RESTAURAR
+// ==========================================
 
-            localStorage.setItem(
-                "antkeeper_colonia_demo",
-                JSON.stringify(colonia)
-            );
+restaurarColonia(id) {
 
-        } catch (error) {
+    const colonia =
+        this.obtenerColoniaPorId(id);
 
-            console.error(
-                "No se pudieron guardar los datos:",
-                error
-            );
+    if (!colonia) {
 
-        }
+        return false;
+
+    }
+
+    colonia.archivada = false;
+
+    this.guardar();
+
+    return true;
+
+},
 
 
-        // 9. Devolver la colonia actualizada
-        return colonia;
-    },
+// ==========================================
+// ELIMINAR
+// ==========================================
+
+eliminarColonia(id) {
+
+    this.datos.colonias =
+        this.datos.colonias.filter(
+            colonia => colonia.id !== id
+        );
+
+    this.guardar();
+
+    return true;
+
+},
 
 
-    cargarDemoGuardada() {
+// ==========================================
+// CALCULAR DÍAS DESDE UNA FECHA
+// ==========================================
 
-        try {
+diasDesde(fechaTexto) {
 
-            const datosGuardados =
-                localStorage.getItem("antkeeper_colonia_demo");
-
-            if (datosGuardados) {
-
-                return JSON.parse(datosGuardados);
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Error cargando la colonia guardada:",
-                error
-            );
-
-        }
-
+    if (!fechaTexto) {
         return null;
     }
 
+    const partes = fechaTexto.split("/");
+
+    if (partes.length !== 3) {
+        return null;
+    }
+
+    const fecha = new Date(
+        Number(partes[2]),
+        Number(partes[1]) - 1,
+        Number(partes[0])
+    );
+
+    const hoy = new Date();
+
+    const diferencia = hoy - fecha;
+
+    return Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+},
+
+
+// ==========================================
+// AVISOS AUTOMÁTICOS DE MANTENIMIENTO
+// ==========================================
+
+calcularAvisosMantenimiento(colonia) {
+
+    const avisos = [];
+
+    // Si la colonia no tiene configuración propia, usamos valores por defecto
+
+    const config = colonia.configuracion || {};
+
+    const DIAS_MAX_REVISION = config.diasRevision ?? 15;
+    const DIAS_MAX_ALIMENTACION = config.diasAlimentacion ?? 7;
+    const DIAS_MAX_AGUA = config.diasAgua ?? 3;
+
+
+    const diasRevision = this.diasDesde(colonia.revision?.ultima);
+
+    if (diasRevision !== null && diasRevision > DIAS_MAX_REVISION) {
+
+        avisos.push({
+            id: colonia.id + "-auto-revision",
+            coloniaId: colonia.id,
+            colonia: colonia.nombre,
+            nivel: "🔍",
+            texto: "Llevan " + diasRevision + " días sin revisión."
+        });
+
+    }
+
+
+    const diasAlimentacion = this.diasDesde(colonia.alimentacion?.ultima);
+
+    if (diasAlimentacion !== null && diasAlimentacion > DIAS_MAX_ALIMENTACION) {
+
+        avisos.push({
+            id: colonia.id + "-auto-alimentacion",
+            coloniaId: colonia.id,
+            colonia: colonia.nombre,
+            nivel: "🍽",
+            texto: "Llevan " + diasAlimentacion + " días sin alimentar."
+        });
+
+    }
+
+
+    const diasAgua = this.diasDesde(colonia.agua?.ultima);
+
+    if (diasAgua !== null && diasAgua > DIAS_MAX_AGUA) {
+
+        avisos.push({
+            id: colonia.id + "-auto-agua",
+            coloniaId: colonia.id,
+            colonia: colonia.nombre,
+            nivel: "💧",
+            texto: "Llevan " + diasAgua + " días sin agua."
+        });
+
+    }
+
+
+    return avisos;
+
+},
+
+
+// ==========================================
+// OBTENER AVISOS
+// ==========================================
+
+obtenerAvisos() {
+
+    const avisos = [];
+
+
+    this.obtenerColonias()
+    .forEach(colonia => {
+
+        // Avisos automáticos de mantenimiento
+
+        this.calcularAvisosMantenimiento(colonia)
+        .forEach(aviso => avisos.push(aviso));
+
+
+        // Avisos manuales guardados en la colonia
+
+        if (!Array.isArray(colonia.avisos)) {
+
+            return;
+
+        }
+
+
+        colonia.avisos
+        .forEach((aviso, indice) => {
+
+            // Compatibilidad con avisos antiguos
+
+            if (
+                typeof aviso === "string"
+            ) {
+
+                avisos.push({
+
+                    id:
+                        colonia.id +
+                        "-aviso-" +
+                        indice,
+
+                    coloniaId:
+                        colonia.id,
+
+                    colonia:
+                        colonia.nombre,
+
+                    nivel: "🚨",
+
+                    texto: aviso
+
+                });
+
+                return;
+
+            }
+
+
+            if (
+                aviso &&
+                aviso.activo !== false
+            ) {
+
+                avisos.push({
+
+                    id:
+                        aviso.id ||
+                        colonia.id +
+                        "-aviso-" +
+                        indice,
+
+                    coloniaId:
+                        colonia.id,
+
+                    colonia:
+                        colonia.nombre,
+
+                    nivel:
+                        aviso.nivel ||
+                        "🚨",
+
+                    texto:
+                        aviso.texto ||
+                        ""
+
+                });
+
+            }
+
+        });
+
+    });
+
+
+    return avisos;
+
+},
+
+
+// ==========================================
+// ACTUALIZAR CONFIGURACIÓN DE AVISOS
+// ==========================================
+
+actualizarConfiguracion(id, configuracion) {
+
+    const colonia =
+        this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+
+        return false;
+
+    }
+
+    if (!colonia.configuracion) {
+
+        colonia.configuracion = {};
+
+    }
+
+    colonia.configuracion.diasRevision =
+        Number(configuracion.diasRevision) || 15;
+
+    colonia.configuracion.diasAlimentacion =
+        Number(configuracion.diasAlimentacion) || 7;
+
+    colonia.configuracion.diasAgua =
+        Number(configuracion.diasAgua) || 3;
+
+    this.guardar();
+
+    return true;
+
+},
+// ==========================================
+// REGISTRAR ALIMENTACIÓN
+// ==========================================
+
+registrarAlimentacion(id, alimento) {
+
+    const colonia = this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+        return false;
+    }
+
+    const hoy = new Date();
+
+    const fecha =
+        String(hoy.getDate()).padStart(2,"0") + "/" +
+        String(hoy.getMonth()+1).padStart(2,"0") + "/" +
+        hoy.getFullYear();
+
+    if (!colonia.alimentacion) {
+        colonia.alimentacion = { ultima: "", alimento: "" };
+    }
+
+    colonia.alimentacion.ultima = fecha;
+
+    colonia.alimentacion.alimento =
+        alimento || colonia.alimentacion.alimento || "";
+
+    if (!Array.isArray(colonia.diario)) {
+        colonia.diario = [];
+    }
+
+    colonia.diario.push({
+        fecha: fecha,
+        titulo: "🍽 Alimentación",
+        texto: "Alimentación registrada" + (alimento ? ": " + alimento : ".")
+    });
+
+    this.guardar();
+
+    return true;
+
+},
+
+
+// ==========================================
+// REGISTRAR AGUA
+// ==========================================
+
+registrarAgua(id) {
+
+    const colonia = this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+        return false;
+    }
+
+    const hoy = new Date();
+
+    const fecha =
+        String(hoy.getDate()).padStart(2,"0") + "/" +
+        String(hoy.getMonth()+1).padStart(2,"0") + "/" +
+        hoy.getFullYear();
+
+    if (!colonia.agua) {
+        colonia.agua = { ultima: "" };
+    }
+
+    colonia.agua.ultima = fecha;
+
+    if (!Array.isArray(colonia.diario)) {
+        colonia.diario = [];
+    }
+
+    colonia.diario.push({
+        fecha: fecha,
+        titulo: "💧 Agua",
+        texto: "Agua añadida a la colonia."
+    });
+
+    this.guardar();
+
+    return true;
+
+},
+// ==========================================
+// AGREGAR ENTRADA DE DIARIO MANUAL
+// ==========================================
+
+agregarEntradaDiario(id, entrada) {
+
+    const colonia = this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+        return false;
+    }
+
+    if (!Array.isArray(colonia.diario)) {
+        colonia.diario = [];
+    }
+
+    colonia.diario.push({
+        fecha: entrada.fecha,
+        titulo: entrada.titulo || "📝 Anotación",
+        texto: entrada.texto || ""
+    });
+
+    this.guardar();
+
+    return true;
+
+},
+// ==========================================
+// AGREGAR REVISIÓN
+// ==========================================
+
+agregarRevision(id, datos) {
+
+    const colonia =
+        this.obtenerColoniaPorId(id);
+
+
+    if (!colonia) {
+
+        console.error(
+            "No se encontró la colonia:",
+            id
+        );
+
+        return null;
+
+    }
+
+
+    // Asegurar estructuras
+
+    if (!colonia.poblacion) {
+
+        colonia.poblacion = {
+
+            huevos: 0,
+
+            larvas: 0,
+
+            pupas: 0,
+
+            obreras: 0
+
+        };
+
+    }
+
+
+    if (!colonia.reina) {
+
+        colonia.reina = {
+
+            estado: "🟢 Reina viva",
+
+            fechaCaptura: ""
+
+        };
+
+    }
+
+
+    if (!colonia.parametros) {
+
+        colonia.parametros = {
+
+            temperatura: "",
+
+            humedad: ""
+
+        };
+
+    }
+
+
+    if (!Array.isArray(colonia.revisiones)) {
+
+        colonia.revisiones = [];
+
+    }
+
+
+    if (!Array.isArray(colonia.diario)) {
+
+        colonia.diario = [];
+
+    }
+
+
+    if (!colonia.revision) {
+
+        colonia.revision = {
+
+            ultima: "",
+
+            notas: ""
+
+        };
+
+    }
+
+
+    // ------------------------------------------
+    // ACTUALIZAR POBLACIÓN
+    // ------------------------------------------
+
+    colonia.poblacion.huevos =
+        Number(datos.huevos) || 0;
+
+    colonia.poblacion.larvas =
+        Number(datos.larvas) || 0;
+
+    colonia.poblacion.pupas =
+        Number(datos.pupas) || 0;
+
+    colonia.poblacion.obreras =
+        Number(datos.obreras) || 0;
+
+
+    // ------------------------------------------
+    // ACTUALIZAR REINA
+    // ------------------------------------------
+
+    colonia.reina.estado =
+        datos.estadoReina;
+
+
+    // ------------------------------------------
+    // ACTUALIZAR PARÁMETROS
+    // ------------------------------------------
+
+    colonia.parametros.temperatura =
+        datos.temperatura || "";
+
+    colonia.parametros.humedad =
+        datos.humedad || "";
+
+
+    // ------------------------------------------
+    // ACTUALIZAR ÚLTIMA REVISIÓN
+    // ------------------------------------------
+
+    colonia.revision.ultima =
+        datos.fecha;
+
+    colonia.revision.notas =
+        datos.notas || "";
+
+
+    // ------------------------------------------
+    // CREAR REVISIÓN
+    // ------------------------------------------
+
+    const nuevaRevision = {
+
+        fecha:
+            datos.fecha,
+
+        estadoReina:
+            datos.estadoReina,
+
+        huevos:
+            colonia.poblacion.huevos,
+
+        larvas:
+            colonia.poblacion.larvas,
+
+        pupas:
+            colonia.poblacion.pupas,
+
+        obreras:
+            colonia.poblacion.obreras,
+
+        temperatura:
+            colonia.parametros.temperatura,
+
+        humedad:
+            colonia.parametros.humedad,
+
+        notas:
+            datos.notas || ""
+
+    };
+
+
+    colonia.revisiones.push(
+        nuevaRevision
+    );
+
+
+    // ------------------------------------------
+    // CREAR ENTRADA DE DIARIO
+    // ------------------------------------------
+
+    const nuevaEntrada = {
+
+        fecha:
+            datos.fecha,
+
+        titulo:
+            "🔍 Revisión de la colonia",
+
+        texto:
+            "Estado de la reina: " +
+            datos.estadoReina +
+            ". " +
+
+            "Huevos: " +
+            colonia.poblacion.huevos +
+            ". " +
+
+            "Larvas: " +
+            colonia.poblacion.larvas +
+            ". " +
+
+            "Pupas: " +
+            colonia.poblacion.pupas +
+            ". " +
+
+            "Obreras: " +
+            colonia.poblacion.obreras +
+            "." +
+
+            (
+                datos.temperatura
+                ?
+                " Temperatura: " +
+                datos.temperatura +
+                "."
+                :
+                ""
+            ) +
+
+            (
+                datos.humedad
+                ?
+                " Humedad: " +
+                datos.humedad +
+                "."
+                :
+                ""
+            ) +
+
+            (
+                datos.notas
+                ?
+                " Observaciones: " +
+                datos.notas
+                :
+                ""
+            )
+
+    };
+
+
+    colonia.diario.push(
+        nuevaEntrada
+    );
+
+
+    // ------------------------------------------
+    // GUARDAR
+    // ------------------------------------------
+
+    this.guardar();
+
+
+    return colonia;
+
+}
+
 };
+
+// ==========================================
+// INICIAR STORAGE
+// ==========================================
+
+Storage.iniciar();

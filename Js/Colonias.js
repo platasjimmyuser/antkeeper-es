@@ -1,193 +1,176 @@
-function mostrarColoniaDemo() {
-
-    const colonia = Storage.obtenerDemo();
-
-    document.getElementById("colonia").innerHTML = `
-
-    <section class="tarjeta">
-<img 
-    src="${colonia.foto.portada}" 
-    alt="${colonia.nombre}"
-    class="foto-colonia">
-        <h2>🐜 ${colonia.nombre}</h2>
-
-        <p><strong>${colonia.reina.estado}</strong></p>
-
-        <p>🧬 Especie: ${colonia.especie}</p>
-
-        <p>📅 Captura: ${colonia.reina.fechaCaptura}</p>
+window.mostrarListaColonias = function(){
 
 
-        <hr>
+    const activas = Storage.obtenerColonias();
 
-        <h3>📊 Población</h3>
-
-        <p>🥚 Huevos: ${colonia.poblacion.huevos}</p>
-        <p>🐛 Larvas: ${colonia.poblacion.larvas}</p>
-        <p>🟤 Pupas: ${colonia.poblacion.pupas}</p>
-        <p>🐜 Obreras: ${colonia.poblacion.obreras}</p>
+    const archivadas = Storage.obtenerColoniasArchivadas();
 
 
-        <hr>
 
-        <h3>📝 Estado actual</h3>
+    document.getElementById("app").innerHTML = `
+
+
+<section class="tarjeta">
+
+
+<h2>🟢 Colonias activas</h2>
+
+
+
+${
+    activas.length === 0
+
+    ?
+
+    "<p>No hay colonias activas.</p>"
+
+    :
+
+    activas.map(colonia=>`
+
+    <article
+
+    class="colonia-card"
+
+    data-id="${colonia.id}">
+
+
+        <img
+
+        src="${colonia.foto.portada}"
+
+        class="mini-foto">
+
+
+        <div>
+
+        <h3>
+
+        ${colonia.nombre}
+
+        </h3>
+
 
         <p>
-        📅 Última revisión:
-        ${colonia.revision.ultima}
+
+        🧬 ${colonia.especie}
+
         </p>
+
 
         <p>
-        🍽 Alimentación:
-        ${colonia.alimentacion.alimento}
+
+        ${colonia.reina.estado}
+
         </p>
 
 
-        <hr>
-
-        <h3>🌡 Parámetros</h3>
-
-        <p>
-        🌡 Temperatura:
-        ${colonia.parametros.temperatura}
-        </p>
-
-        <p>
-        💧 Humedad:
-        ${colonia.parametros.humedad}
-        </p>
+        </div>
 
 
-        <hr>
-
-        <h3>🔔 Avisos</h3>
-
-        ${colonia.avisos.map(aviso => `
-
-            <p>${aviso}</p>
-
-        `).join("")}
+    </article>
 
 
-        <hr>
+    `).join("")
 
-        <h3>🛠 Módulos</h3>
-
-        <button id="btnFotos">
-           📷 Fotos
-       </button>
-
-        <button id="btnDiario">
-            📖 Diario
-        </button>
-
-        <button>
-            📊 Evolución
-        </button>
-
-        <button>
-            🍽 Alimentación
-        </button>
-
-        <button>
-            🌡 Parámetros
-        </button>
-
-
-        <br><br>
-
-        <button onclick="history.back()">
-            ⬅ Volver
-        </button>
-
-
-    </section>
-
-    `;
-
-
-    document
-        .getElementById("btnDiario")
-        .addEventListener("click", () => {
-
-            document.getElementById("colonia").innerHTML = `
-
-            <section class="tarjeta">
-
-                <h2>📖 Diario - ${colonia.nombre}</h2>
-
-
-                ${colonia.diario.map(entrada => `
-
-                    <article>
-
-                        <h3>${entrada.fecha}</h3>
-
-                        <strong>${entrada.titulo}</strong>
-
-                        <p>${entrada.texto}</p>
-
-                    </article>
-
-                    <hr>
-
-                `).join("")}
-
-
-                <button onclick="mostrarColoniaDemo()">
-                    ⬅ Volver a colonia
-                </button>
-
-
-            </section>
-
-            `;
-
-        });
-    document
-        .getElementById("btnFotos")
-        .addEventListener("click", () => {
-
-            document.getElementById("colonia").innerHTML = `
-
-            <section class="tarjeta">
-
-                <h2>📷 Fotos - ${colonia.nombre}</h2>
-
-
-                <img 
-                    src="${colonia.foto.portada}"
-                    alt="${colonia.nombre}"
-                    class="foto-colonia">
-
-
-                <h3>🖼️ Galería</h3>
-
-
-                ${
-                    colonia.foto.galeria.length === 0
-                    ? "<p>No hay fotos todavía.</p>"
-                    : colonia.foto.galeria.map(foto => `
-                    
-                        <img 
-                        src="${foto}"
-                        class="foto-colonia">
-
-                    `).join("")
-                }
-
-
-                <br><br>
-
-
-                <button onclick="mostrarColoniaDemo()">
-                    ⬅ Volver a colonia
-                </button>
-
-
-            </section>
-
-            `;
-
-        });
 }
+
+
+
+</section>
+
+
+
+
+
+<section class="tarjeta">
+
+
+<h2>📦 Colonias archivadas</h2>
+
+
+
+${
+    archivadas.length === 0
+
+    ?
+
+    "<p>No hay colonias archivadas.</p>"
+
+    :
+
+    archivadas.map(colonia=>`
+
+    <article
+
+    class="colonia-card archivada"
+
+    data-id="${colonia.id}">
+
+
+        <h3>
+
+        ${colonia.nombre}
+
+        </h3>
+
+
+        <p>
+
+        🧬 ${colonia.especie}
+
+        </p>
+
+
+        <p>
+
+        📦 Archivada
+
+        </p>
+
+
+    </article>
+
+
+    `).join("")
+
+}
+
+
+
+</section>
+
+
+`;
+
+
+
+
+
+document
+
+.querySelectorAll(".colonia-card")
+
+.forEach(card=>{
+
+
+    card.addEventListener("click",()=>{
+
+
+        const colonia = Storage.obtenerColoniaPorId(
+
+            card.dataset.id
+
+        );
+
+
+        mostrarColonia(colonia);
+
+
+    });
+
+
+});
+
+
+};

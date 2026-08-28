@@ -1,17 +1,140 @@
-document.addEventListener("DOMContentLoaded", () => {
+const App = {
 
-    const boton = document.getElementById("btnDemo");
 
-    if (boton) {
-        boton.addEventListener("click", () => {
-            location.href = "Pages/Colonia.html";
+    iniciar(){
+
+
+        this.configurarNavegacion();
+
+
+        mostrarInicio();
+
+
+    },
+
+
+
+
+    configurarNavegacion(){
+
+
+
+        const btnInicio = document.getElementById("btnInicio");
+
+        const btnColonias = document.getElementById("btnColonias");
+
+        const btnNuevaColonia = document.getElementById("btnNuevaColonia");
+
+        const btnAjustes = document.getElementById("btnAjustes");
+
+
+
+
+        btnInicio?.addEventListener("click",()=>{
+
+
+            mostrarInicio();
+
+
         });
+
+
+
+
+
+        btnColonias?.addEventListener("click",()=>{
+
+
+            mostrarListaColonias();
+
+
+        });
+
+
+
+
+
+        btnNuevaColonia?.addEventListener("click",()=>{
+
+
+            if(typeof mostrarFormularioColonia === "function"){
+
+
+                mostrarFormularioColonia();
+
+
+            }else{
+
+
+                alert("Error: no se ha cargado FormularioColonia.js");
+
+
+            }
+
+
+        });
+
+
+
+
+
+        btnAjustes?.addEventListener("click",()=>{
+
+
+            this.mostrarAjustes();
+
+
+        });
+
+
+
+    },
+
+
+
+
+
+
+    mostrarAjustes(){
+
+
+
+        document.getElementById("app").innerHTML = `
+
+
+        <section class="tarjeta">
+
+
+            <h2>⚙️ Ajustes</h2>
+
+
+            <p>
+
+            Configuración de AntKeeper ES
+
+            </p>
+
+
+        </section>
+
+
+        `;
+
+
     }
 
-    const contenedorColonia = document.getElementById("colonia");
 
-    if (contenedorColonia) {
-        mostrarColoniaDemo();
-    }
+
+};
+
+
+
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+
+    App.iniciar();
+
 
 });
