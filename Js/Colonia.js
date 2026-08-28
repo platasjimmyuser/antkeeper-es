@@ -162,11 +162,17 @@ ${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
 
 
 
-        <button id="btnNuevaFoto">
+        <button id="btnFoto">
 
-        📷 Añadir foto
+        📷 Fotos
 
         </button>
+
+        <input
+        type="file"
+        id="inputFoto"
+        accept="image/*"
+        hidden>
 
 
 
@@ -374,17 +380,38 @@ ${colonia.archivada ? "♻️ Restaurar colonia" : "📦 Archivar colonia"}
 
     <details class="tarjeta">
 
-        <summary>📷 Galería</summary>
+        <summary>📷 Galería (${colonia.foto.galeria ? colonia.foto.galeria.length : 0})</summary>
 
         <br>
 
+        <p style="font-size:12px;color:#777;">Toca una foto para ponerla como portada.</p>
 
-        <img
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
 
-        src="${colonia.foto.portada}"
+        ${
+            (!colonia.foto.galeria || colonia.foto.galeria.length === 0)
 
-        class="foto-colonia">
+            ?
 
+            `<img src="${colonia.foto.portada}" style="grid-column:1/-1;width:100%;border-radius:8px;">`
+
+            :
+
+            colonia.foto.galeria
+
+            .map((foto, indice) => `
+
+                <img
+                src="${foto.imagen}"
+                data-indice="${indice}"
+                class="foto-galeria"
+                style="width:100%;border-radius:8px;cursor:pointer;">
+
+            `).join("")
+
+        }
+
+        </div>
 
     </details>
 
@@ -479,15 +506,61 @@ document
 
 
 
-
-
-    document.getElementById("btnNuevaFoto")
+    document.getElementById("btnFoto")
 
     .onclick = ()=>{
 
-        alert("Módulo Fotos próximamente");
+        document.getElementById("inputFoto").click();
 
     };
+
+
+
+    document.getElementById("inputFoto")
+
+    .onchange = (evento)=>{
+
+        const archivo = evento.target.files[0];
+
+        if(!archivo){
+            return;
+        }
+
+        comprimirImagen(archivo, 800, 0.7, (base64)=>{
+
+            Storage.agregarFotoGaleria(colonia.id, base64);
+
+            mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
+
+        });
+
+    };
+
+
+
+    document
+
+    .querySelectorAll(".foto-galeria")
+
+    .forEach(img=>{
+
+        img.addEventListener("click", ()=>{
+
+            const indice = img.dataset.indice;
+
+            const foto = colonia.foto.galeria[indice];
+
+            if(confirm("¿Poner esta foto como portada de la colonia?")){
+
+                Storage.establecerPortada(colonia.id, foto.imagen);
+
+                mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
+
+            }
+
+        });
+
+    });
 
 
 

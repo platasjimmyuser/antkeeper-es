@@ -684,6 +684,68 @@ registrarAgua(id) {
     return true;
 
 },
+  // ==========================================
+// AÑADIR FOTO A LA GALERÍA
+// ==========================================
+
+agregarFotoGaleria(id, imagenBase64) {
+
+    const colonia = this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+        return false;
+    }
+
+    if (!colonia.foto) {
+        colonia.foto = { portada: "", galeria: [] };
+    }
+
+    if (!Array.isArray(colonia.foto.galeria)) {
+        colonia.foto.galeria = [];
+    }
+
+    const hoy = new Date();
+
+    const fecha =
+        String(hoy.getDate()).padStart(2,"0") + "/" +
+        String(hoy.getMonth()+1).padStart(2,"0") + "/" +
+        hoy.getFullYear();
+
+    colonia.foto.galeria.push({
+        fecha: fecha,
+        imagen: imagenBase64
+    });
+
+    if (!colonia.foto.portada || colonia.foto.portada.startsWith("blob:")) {
+        colonia.foto.portada = imagenBase64;
+    }
+
+    this.guardar();
+
+    return true;
+
+},
+
+
+// ==========================================
+// ESTABLECER FOTO DE PORTADA
+// ==========================================
+
+establecerPortada(id, imagenBase64) {
+
+    const colonia = this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+        return false;
+    }
+
+    colonia.foto.portada = imagenBase64;
+
+    this.guardar();
+
+    return true;
+
+},
 // ==========================================
 // AGREGAR ENTRADA DE DIARIO MANUAL
 // ==========================================
