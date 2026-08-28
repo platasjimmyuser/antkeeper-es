@@ -3,7 +3,8 @@ const Storage = {
 clave: "antkeeper_datos",
 
 datos: {
-    colonias: []
+    colonias: [],
+    especiesPersonalizadas: []
 },
 
 
@@ -33,7 +34,8 @@ iniciar() {
             } else {
 
                 this.datos = {
-                    colonias: []
+                    colonias: [],
+                    especiesPersonalizadas: []
                 };
 
             }
@@ -41,7 +43,8 @@ iniciar() {
         } else {
 
             this.datos = {
-                colonias: []
+                colonias: [],
+                especiesPersonalizadas: []
             };
 
         }
@@ -54,8 +57,16 @@ iniciar() {
         );
 
         this.datos = {
-            colonias: []
+            colonias: [],
+            especiesPersonalizadas: []
         };
+
+    }
+
+
+    if (!Array.isArray(this.datos.especiesPersonalizadas)) {
+
+        this.datos.especiesPersonalizadas = [];
 
     }
 
@@ -366,6 +377,124 @@ eliminarColonia(id) {
 
 
 // ==========================================
+// ESPECIES PERSONALIZADAS
+// ==========================================
+
+agregarEspeciePersonalizada(nombre) {
+
+    const limpio = (nombre || "").trim();
+
+    if (limpio === "") {
+        return false;
+    }
+
+    if (!Array.isArray(this.datos.especiesPersonalizadas)) {
+        this.datos.especiesPersonalizadas = [];
+    }
+
+    const yaExiste =
+        this.datos.especiesPersonalizadas.includes(limpio) ||
+        (typeof ESPECIES !== "undefined" && ESPECIES.includes(limpio));
+
+    if (yaExiste) {
+        return false;
+    }
+
+    this.datos.especiesPersonalizadas.push(limpio);
+
+    this.guardar();
+
+    return true;
+
+},
+
+
+eliminarEspeciePersonalizada(nombre) {
+
+    if (!Array.isArray(this.datos.especiesPersonalizadas)) {
+        return false;
+    }
+
+    this.datos.especiesPersonalizadas =
+        this.datos.especiesPersonalizadas.filter(e => e !== nombre);
+
+    this.guardar();
+
+    return true;
+
+},
+
+
+obtenerTodasEspecies() {
+
+    const base = (typeof ESPECIES !== "undefined") ? ESPECIES : [];
+
+    const personalizadas =
+        Array.isArray(this.datos.especiesPersonalizadas)
+            ? this.datos.especiesPersonalizadas
+            : [];
+
+    return [...base, ...personalizadas].sort();
+
+},
+
+
+// ==========================================
+// COPIA DE SEGURIDAD
+// ==========================================
+
+exportarDatos() {
+
+    return JSON.stringify(this.datos, null, 2);
+
+},
+
+
+importarDatos(jsonTexto) {
+
+    try {
+
+        const datos = JSON.parse(jsonTexto);
+
+        if (!datos || !Array.isArray(datos.colonias)) {
+            return false;
+        }
+
+        if (!Array.isArray(datos.especiesPersonalizadas)) {
+            datos.especiesPersonalizadas = [];
+        }
+
+        this.datos = datos;
+
+        this.guardar();
+
+        return true;
+
+    } catch (error) {
+
+        console.error("Error importando datos:", error);
+
+        return false;
+
+    }
+
+},
+
+
+// ==========================================
+// BORRAR TODOS LOS DATOS
+// ==========================================
+
+borrarTodo() {
+
+    localStorage.removeItem(this.clave);
+
+    location.reload();
+
+},
+
+
+// ==========================================
 // CALCULAR DÍAS DESDE UNA FECHA
 // ==========================================
 
@@ -403,8 +532,6 @@ diasDesde(fechaTexto) {
 calcularAvisosMantenimiento(colonia) {
 
     const avisos = [];
-
-    // Si la colonia no tiene configuración propia, usamos valores por defecto
 
     const config = colonia.configuracion || {};
 
@@ -475,13 +602,9 @@ obtenerAvisos() {
     this.obtenerColonias()
     .forEach(colonia => {
 
-        // Avisos automáticos de mantenimiento
-
         this.calcularAvisosMantenimiento(colonia)
         .forEach(aviso => avisos.push(aviso));
 
-
-        // Avisos manuales guardados en la colonia
 
         if (!Array.isArray(colonia.avisos)) {
 
@@ -492,8 +615,6 @@ obtenerAvisos() {
 
         colonia.avisos
         .forEach((aviso, indice) => {
-
-            // Compatibilidad con avisos antiguos
 
             if (
                 typeof aviso === "string"
@@ -599,6 +720,8 @@ actualizarConfiguracion(id, configuracion) {
     return true;
 
 },
+
+
 // ==========================================
 // REGISTRAR ALIMENTACIÓN
 // ==========================================
@@ -684,7 +807,9 @@ registrarAgua(id) {
     return true;
 
 },
-  // ==========================================
+
+
+// ==========================================
 // AÑADIR FOTO A LA GALERÍA
 // ==========================================
 
@@ -746,6 +871,8 @@ establecerPortada(id, imagenBase64) {
     return true;
 
 },
+
+
 // ==========================================
 // AGREGAR ENTRADA DE DIARIO MANUAL
 // ==========================================
@@ -773,6 +900,8 @@ agregarEntradaDiario(id, entrada) {
     return true;
 
 },
+
+
 // ==========================================
 // AGREGAR REVISIÓN
 // ==========================================
@@ -794,8 +923,6 @@ agregarRevision(id, datos) {
 
     }
 
-
-    // Asegurar estructuras
 
     if (!colonia.poblacion) {
 
@@ -867,10 +994,6 @@ agregarRevision(id, datos) {
     }
 
 
-    // ------------------------------------------
-    // ACTUALIZAR POBLACIÓN
-    // ------------------------------------------
-
     colonia.poblacion.huevos =
         Number(datos.huevos) || 0;
 
@@ -884,17 +1007,9 @@ agregarRevision(id, datos) {
         Number(datos.obreras) || 0;
 
 
-    // ------------------------------------------
-    // ACTUALIZAR REINA
-    // ------------------------------------------
-
     colonia.reina.estado =
         datos.estadoReina;
 
-
-    // ------------------------------------------
-    // ACTUALIZAR PARÁMETROS
-    // ------------------------------------------
 
     colonia.parametros.temperatura =
         datos.temperatura || "";
@@ -903,20 +1018,12 @@ agregarRevision(id, datos) {
         datos.humedad || "";
 
 
-    // ------------------------------------------
-    // ACTUALIZAR ÚLTIMA REVISIÓN
-    // ------------------------------------------
-
     colonia.revision.ultima =
         datos.fecha;
 
     colonia.revision.notas =
         datos.notas || "";
 
-
-    // ------------------------------------------
-    // CREAR REVISIÓN
-    // ------------------------------------------
 
     const nuevaRevision = {
 
@@ -954,10 +1061,6 @@ agregarRevision(id, datos) {
         nuevaRevision
     );
 
-
-    // ------------------------------------------
-    // CREAR ENTRADA DE DIARIO
-    // ------------------------------------------
 
     const nuevaEntrada = {
 
@@ -1024,10 +1127,6 @@ agregarRevision(id, datos) {
         nuevaEntrada
     );
 
-
-    // ------------------------------------------
-    // GUARDAR
-    // ------------------------------------------
 
     this.guardar();
 

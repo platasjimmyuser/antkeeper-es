@@ -88,7 +88,7 @@ placeholder="Ej: Messor Barcelona">
 
 <select id="especieNuevaColonia">
 
-${ESPECIES.map(especie=>`
+${Storage.obtenerTodasEspecies().map(especie=>`
 
 <option
 value="${especie}"

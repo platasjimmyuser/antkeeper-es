@@ -97,29 +97,22 @@ const App = {
 
     mostrarAjustes(){
 
+        if(typeof mostrarPantallaAjustes === "function"){
 
+            mostrarPantallaAjustes();
 
-        document.getElementById("app").innerHTML = `
+        }else{
 
+            document.getElementById("app").innerHTML = `
+            <section class="tarjeta">
+                <h2>⚙️ Ajustes</h2>
+                <p>
+                Configuración de AntKeeper ES
+                </p>
+            </section>
+            `;
 
-        <section class="tarjeta">
-
-
-            <h2>⚙️ Ajustes</h2>
-
-
-            <p>
-
-            Configuración de AntKeeper ES
-
-            </p>
-
-
-        </section>
-
-
-        `;
-
+        }
 
     }
 
