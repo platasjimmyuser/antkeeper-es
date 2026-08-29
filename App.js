@@ -7,7 +7,36 @@ const App = {
         this.configurarNavegacion();
 
 
-        mostrarInicio();
+        const ultima = (typeof Storage !== "undefined") ? Storage.obtenerUltimaPantalla() : null;
+
+
+        if(ultima && ultima.tipo === "colonia" && ultima.id){
+
+            const colonia = Storage.obtenerColoniaPorId(ultima.id);
+
+            if(colonia){
+                mostrarColonia(colonia);
+            }else{
+                mostrarInicio();
+            }
+
+        }else if(ultima && ultima.tipo === "colonias"){
+
+            mostrarListaColonias();
+
+        }else if(ultima && ultima.tipo === "ajustes" && typeof mostrarPantallaAjustes === "function"){
+
+            mostrarPantallaAjustes();
+
+        }else if(ultima && ultima.tipo === "nuevaColonia" && typeof mostrarFormularioColonia === "function"){
+
+            mostrarFormularioColonia();
+
+        }else{
+
+            mostrarInicio();
+
+        }
 
 
     },

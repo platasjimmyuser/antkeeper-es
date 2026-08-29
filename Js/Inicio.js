@@ -1,6 +1,7 @@
 function mostrarInicio(){
 
-
+Storage.guardarUltimaPantalla("inicio");
+  
     const avisos = Storage.obtenerAvisos();
 
     const colonias = Storage.obtenerColonias();

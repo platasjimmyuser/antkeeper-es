@@ -10,6 +10,9 @@ window.mostrarColonia = function(colonia){
     }
 
 
+    Storage.guardarUltimaPantalla("colonia", colonia.id);
+
+
 
     document.getElementById("app").innerHTML = `
 
@@ -137,81 +140,60 @@ ${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
         <h2>⚡ Acciones</h2>
 
 
-
-        <button id="btnRevision">
-
-        🔍 Revisión
-
-        </button>
+        <div class="acciones-grid">
 
 
-
-        <button id="btnAlimentacion">
-
-        🍽 Alimentación
-
-        </button>
+            <button id="btnRevision" class="boton-accion">
+                <span class="icono-accion">🔍</span>
+                <span class="etiqueta-accion">Revisión</span>
+            </button>
 
 
-
-        <button id="btnConfiguracion">
-
-        ⚙️ Configurar avisos
-
-        </button>
+            <button id="btnAlimentacion" class="boton-accion">
+                <span class="icono-accion">🍽</span>
+                <span class="etiqueta-accion">Alimentación</span>
+            </button>
 
 
-
-        <button id="btnFoto">
-
-        📷 Fotos
-
-        </button>
-
-        <input
-        type="file"
-        id="inputFoto"
-        accept="image/*"
-        hidden>
+            <button id="btnConfiguracion" class="boton-accion">
+                <span class="icono-accion">⚙️</span>
+                <span class="etiqueta-accion">Configurar avisos</span>
+            </button>
 
 
+            <button id="btnFoto" class="boton-accion">
+                <span class="icono-accion">📷</span>
+                <span class="etiqueta-accion">Fotos</span>
+            </button>
 
-        <button id="btnNuevoDiario">
-
-        📝 Diario
-
-        </button>
-
-
-
-        <button id="btnModificar">
-
-        ✏️ Modificar colonia
-
-        </button>
+            <input type="file" id="inputFoto" accept="image/*" hidden>
 
 
-
-        <button id="btnArchivar">
-
-${colonia.archivada ? "♻️ Restaurar colonia" : "📦 Archivar colonia"}
-
-</button>
+            <button id="btnNuevoDiario" class="boton-accion">
+                <span class="icono-accion">📝</span>
+                <span class="etiqueta-accion">Diario</span>
+            </button>
 
 
-
-        <button
-
-        id="btnEliminar"
-
-        style="background:#c62828;color:white">
+            <button id="btnModificar" class="boton-accion">
+                <span class="icono-accion">✏️</span>
+                <span class="etiqueta-accion">Modificar</span>
+            </button>
 
 
-        🗑️ Eliminar colonia
+            <button id="btnArchivar" class="boton-accion">
+                <span class="icono-accion">${colonia.archivada ? "♻️" : "📦"}</span>
+                <span class="etiqueta-accion">${colonia.archivada ? "Restaurar" : "Archivar"}</span>
+            </button>
 
 
-        </button>
+            <button id="btnEliminar" class="boton-accion" style="background:#c62828;color:white">
+                <span class="icono-accion">🗑️</span>
+                <span class="etiqueta-accion">Eliminar</span>
+            </button>
 
+
+        </div>
 
 
     </section>
@@ -219,229 +201,218 @@ ${colonia.archivada ? "♻️ Restaurar colonia" : "📦 Archivar colonia"}
 
 
 
+    <section class="tarjeta grupo-desplegables">
 
 
-    <details class="tarjeta">
+        <details>
 
-        <summary>📝 Diario</summary>
+            <summary>📝 Diario</summary>
 
-        <br>
+            <br>
 
 
-        ${
-    colonia.diario.length === 0
+            ${
+        colonia.diario.length === 0
 
-    ?
+        ?
 
-    "<p>No hay anotaciones.</p>"
+        "<p>No hay anotaciones.</p>"
 
-    :
+        :
 
-    [...colonia.diario]
+        [...colonia.diario]
 
-    .map((entrada, indice) => ({ entrada, indice }))
+        .map((entrada, indice) => ({ entrada, indice }))
 
-    .sort((a, b) => {
+        .sort((a, b) => {
 
-        const [diaA, mesA, anioA] = a.entrada.fecha.split("/");
-        const [diaB, mesB, anioB] = b.entrada.fecha.split("/");
+            const [diaA, mesA, anioA] = a.entrada.fecha.split("/");
+            const [diaB, mesB, anioB] = b.entrada.fecha.split("/");
 
-        const fechaA = new Date(anioA, mesA - 1, diaA);
-        const fechaB = new Date(anioB, mesB - 1, diaB);
+            const fechaA = new Date(anioA, mesA - 1, diaA);
+            const fechaB = new Date(anioB, mesB - 1, diaB);
 
-        if (fechaB - fechaA !== 0) {
-            return fechaB - fechaA;
-        }
+            if (fechaB - fechaA !== 0) {
+                return fechaB - fechaA;
+            }
 
-        return b.indice - a.indice;
+            return b.indice - a.indice;
 
-    })
+        })
 
-    .map(({entrada})=>`
+        .map(({entrada})=>`
 
-                <article>
+                    <article>
 
-                    <strong>${entrada.fecha}</strong>
+                        <strong>${entrada.fecha}</strong>
 
-                    <h4>${entrada.titulo}</h4>
+                        <h4>${entrada.titulo}</h4>
 
-                    <p>${entrada.texto}</p>
+                        <p>${entrada.texto}</p>
 
-                </article>
+                    </article>
 
-                <hr>
+                    <hr>
 
 
-            `).join("")
+                `).join("")
 
-        }
+            }
 
 
-    </details>
+        </details>
 
 
 
+        <details>
 
+            <summary>🍽 Alimentación</summary>
 
+            <br>
 
-    <details class="tarjeta">
 
-        <summary>🍽 Alimentación</summary>
+            <p>
 
-        <br>
+            Última:
 
+            ${colonia.alimentacion.ultima || "--"}
 
-        <p>
+            </p>
 
-        Última:
 
-        ${colonia.alimentacion.ultima || "--"}
+            <p>
 
-        </p>
+            ${colonia.alimentacion.alimento || "Sin datos"}
 
+            </p>
 
-        <p>
 
-        ${colonia.alimentacion.alimento || "Sin datos"}
+        </details>
 
-        </p>
 
 
-    </details>
+        <details>
 
+            <summary>🌡 Parámetros</summary>
 
+            <br>
 
 
+            <p>
 
+            🌡 ${colonia.parametros.temperatura || "--"}
 
-    <details class="tarjeta">
+            </p>
 
-        <summary>🌡 Parámetros</summary>
 
-        <br>
+            <p>
 
+            💧 ${colonia.parametros.humedad || "--"}
 
-        <p>
+            </p>
 
-        🌡 ${colonia.parametros.temperatura || "--"}
 
-        </p>
+        </details>
 
 
-        <p>
 
-        💧 ${colonia.parametros.humedad || "--"}
+        <details>
 
-        </p>
+            <summary>🚨 Avisos</summary>
 
+            <br>
 
-    </details>
 
+            ${
+                colonia.avisos.filter(a=>a.activo).length === 0
 
+                ?
 
+                "<p>🟢 Sin avisos.</p>"
 
+                :
 
+                colonia.avisos
 
-    <details class="tarjeta">
+                .filter(a=>a.activo)
 
-        <summary>🚨 Avisos</summary>
+                .map(a=>`
 
-        <br>
+                    <p>${a.nivel} ${a.texto}</p>
 
+                `).join("")
 
-        ${
-            colonia.avisos.filter(a=>a.activo).length === 0
+            }
 
-            ?
 
-            "<p>🟢 Sin avisos.</p>"
+        </details>
 
-            :
 
-            colonia.avisos
 
-            .filter(a=>a.activo)
+        <details>
 
-            .map(a=>`
+            <summary>📷 Galería (${colonia.foto.galeria ? colonia.foto.galeria.length : 0})</summary>
 
-                <p>${a.nivel} ${a.texto}</p>
+            <br>
 
-            `).join("")
+            <p style="font-size:12px;color:#777;">Toca una foto para ponerla como portada.</p>
 
-        }
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
 
+            ${
+                (!colonia.foto.galeria || colonia.foto.galeria.length === 0)
 
-    </details>
+                ?
 
+                `<img src="${colonia.foto.portada}" style="grid-column:1/-1;width:100%;border-radius:8px;">`
 
+                :
 
+                colonia.foto.galeria
 
+                .map((foto, indice) => `
 
+                    <img
+                    src="${foto.imagen}"
+                    data-indice="${indice}"
+                    class="foto-galeria"
+                    style="width:100%;border-radius:8px;cursor:pointer;">
 
-    <details class="tarjeta">
+                `).join("")
 
-        <summary>📷 Galería (${colonia.foto.galeria ? colonia.foto.galeria.length : 0})</summary>
+            }
 
-        <br>
+            </div>
 
-        <p style="font-size:12px;color:#777;">Toca una foto para ponerla como portada.</p>
+        </details>
 
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
 
-        ${
-            (!colonia.foto.galeria || colonia.foto.galeria.length === 0)
 
-            ?
+        <details>
 
-            `<img src="${colonia.foto.portada}" style="grid-column:1/-1;width:100%;border-radius:8px;">`
+            <summary>📈 Evolución</summary>
 
-            :
+            <br>
 
-            colonia.foto.galeria
 
-            .map((foto, indice) => `
+            ${
+                typeof generarGraficaEvolucion === "function"
 
-                <img
-                src="${foto.imagen}"
-                data-indice="${indice}"
-                class="foto-galeria"
-                style="width:100%;border-radius:8px;cursor:pointer;">
+                ?
 
-            `).join("")
+                generarGraficaEvolucion(colonia.revisiones)
 
-        }
+                :
 
-        </div>
+                "<p>Gráfica no disponible.</p>"
 
-    </details>
+            }
 
 
+        </details>
 
 
-
-
-    <details class="tarjeta">
-
-        <summary>📈 Evolución</summary>
-
-        <br>
-
-
-        ${
-            typeof generarGraficaEvolucion === "function"
-
-            ?
-
-            generarGraficaEvolucion(colonia.revisiones)
-
-            :
-
-            "<p>Gráfica no disponible.</p>"
-
-        }
-
-
-    </details>
+    </section>
 
 
 

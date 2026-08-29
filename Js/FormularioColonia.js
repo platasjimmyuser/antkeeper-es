@@ -1,7 +1,9 @@
 function mostrarFormularioColonia(colonia = null){
 
 const editando = colonia !== null;
-
+if(!editando){
+    Storage.guardarUltimaPantalla("nuevaColonia");
+}
 let fotoSeleccionada = editando
 ? colonia.foto.portada
 : "Assets/Images/default-ant.png";

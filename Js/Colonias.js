@@ -1,6 +1,6 @@
 window.mostrarListaColonias = function(){
 
-
+Storage.guardarUltimaPantalla("colonias");
     const activas = Storage.obtenerColonias();
 
     const archivadas = Storage.obtenerColoniasArchivadas();

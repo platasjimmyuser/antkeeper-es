@@ -491,7 +491,47 @@ borrarTodo() {
 
 },
 
+// ==========================================
+// RECORDAR ÚLTIMA PANTALLA (sobrevive al refresco)
+// ==========================================
 
+guardarUltimaPantalla(tipo, id) {
+
+    try {
+
+        sessionStorage.setItem("antkeeper_ultima_pantalla", JSON.stringify({
+            tipo: tipo,
+            id: id || null
+        }));
+
+    } catch (error) {
+
+        console.error("Error guardando última pantalla:", error);
+
+    }
+
+},
+
+
+obtenerUltimaPantalla() {
+
+    try {
+
+        const guardado = sessionStorage.getItem("antkeeper_ultima_pantalla");
+
+        if (!guardado) {
+            return null;
+        }
+
+        return JSON.parse(guardado);
+
+    } catch (error) {
+
+        return null;
+
+    }
+
+},
 // ==========================================
 // CONVERSIÓN DE FECHAS (calendario nativo)
 // ==========================================

@@ -1,5 +1,5 @@
 window.mostrarPantallaAjustes = function(){
-
+Storage.guardarUltimaPantalla("ajustes");
     document.getElementById("app").innerHTML = `
 
     <section class="tarjeta">

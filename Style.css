@@ -364,6 +364,158 @@ button:active {
 
 
 /* =========================
+   BOTONES DE ACCIONES (OCUPAN TODA LA LÍNEA)
+========================= */
+
+
+.acciones-grid {
+
+
+    display:grid;
+
+    grid-auto-flow:column;
+
+    grid-auto-columns:1fr;
+
+    gap:8px;
+
+
+}
+
+
+
+.boton-accion {
+
+
+    width:100%;
+
+    aspect-ratio:1 / 1;
+
+    margin:0;
+
+    padding:6px 3px;
+
+    border-radius:14px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:4px;
+
+    text-align:center;
+
+    overflow:hidden;
+
+
+}
+
+
+
+.boton-accion .icono-accion {
+
+
+    height:26px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:22px;
+
+    line-height:1;
+
+    flex-shrink:0;
+
+
+}
+
+
+
+.boton-accion .etiqueta-accion {
+
+
+    min-height:2.4em;
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:center;
+
+    font-size:10.5px;
+
+    font-weight:600;
+
+    line-height:1.2;
+
+
+}
+
+
+
+/* =========================
+   GRUPO DE DESPLEGABLES (BARRAS JUNTAS)
+========================= */
+
+
+.grupo-desplegables details {
+
+
+    border-bottom:1px solid #eee;
+
+    padding:12px 0;
+
+
+}
+
+
+
+.grupo-desplegables details:last-child {
+
+
+    border-bottom:none;
+
+    padding-bottom:0;
+
+
+}
+
+
+
+.grupo-desplegables details:first-child {
+
+
+    padding-top:0;
+
+
+}
+
+
+
+.grupo-desplegables summary {
+
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    padding:4px 0;
+
+    list-style:revert;
+
+
+}
+
+
+
+/* =========================
    BARRA INFERIOR FIJA
 ========================= */
 
