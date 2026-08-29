@@ -131,3 +131,20 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 });
+
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", () => {
+
+        navigator.serviceWorker.register("Sw.js")
+        .then(() => {
+            console.log("Service Worker registrado correctamente.");
+        })
+        .catch((error) => {
+            console.error("Error registrando Service Worker:", error);
+        });
+
+    });
+
+}
