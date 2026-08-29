@@ -2,10 +2,11 @@ function mostrarRevision(colonia){
 
     const hoy = new Date();
 
-    const fecha =
-        String(hoy.getDate()).padStart(2,"0") + "/" +
-        String(hoy.getMonth()+1).padStart(2,"0") + "/" +
-        hoy.getFullYear();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth()+1).padStart(2,"0");
+    const dia = String(hoy.getDate()).padStart(2,"0");
+
+    const fechaHoyISO = anio + "-" + mes + "-" + dia;
 
 
     document.getElementById("app").innerHTML = `
@@ -16,7 +17,9 @@ function mostrarRevision(colonia){
 
         <p><strong>${colonia.nombre}</strong></p>
 
-        <p>📅 ${fecha}</p>
+        <label>📅 Fecha</label>
+        <br>
+        <input type="date" id="fechaRevision" value="${fechaHoyISO}">
 
         <hr>
 
@@ -105,6 +108,20 @@ function mostrarRevision(colonia){
     document
     .getElementById("guardarRevision")
 .onclick = ()=>{
+
+
+    const fechaISO =
+        document.getElementById("fechaRevision").value;
+
+    if(fechaISO === ""){
+
+        alert("Selecciona una fecha.");
+
+        return;
+
+    }
+
+    const fecha = Storage.convertirISOaFecha(fechaISO);
 
 
     const revision = {

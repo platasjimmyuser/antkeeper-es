@@ -71,8 +71,6 @@ iniciar() {
     }
 
 
-    // Crear DEMO solamente si no existe ninguna colonia
-
     if (this.datos.colonias.length === 0) {
 
         this.crearDemo();
@@ -490,6 +488,52 @@ borrarTodo() {
     localStorage.removeItem(this.clave);
 
     location.reload();
+
+},
+
+
+// ==========================================
+// CONVERSIÓN DE FECHAS (calendario nativo)
+// ==========================================
+
+convertirFechaaISO(fechaDDMMYYYY) {
+
+    if (!fechaDDMMYYYY) {
+        return "";
+    }
+
+    const partes = fechaDDMMYYYY.split("/");
+
+    if (partes.length !== 3) {
+        return "";
+    }
+
+    const dia = partes[0].padStart(2, "0");
+    const mes = partes[1].padStart(2, "0");
+    const anio = partes[2];
+
+    return anio + "-" + mes + "-" + dia;
+
+},
+
+
+convertirISOaFecha(fechaISO) {
+
+    if (!fechaISO) {
+        return "";
+    }
+
+    const partes = fechaISO.split("-");
+
+    if (partes.length !== 3) {
+        return "";
+    }
+
+    const anio = partes[0];
+    const mes = partes[1];
+    const dia = partes[2];
+
+    return dia + "/" + mes + "/" + anio;
 
 },
 

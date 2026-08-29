@@ -112,15 +112,11 @@ ${especie}
 
 <input
 
-type="text"
+type="date"
 
 id="fechaNuevaColonia"
 
-maxlength="10"
-
-placeholder="dd/mm/aaaa"
-
-value="${editando ? colonia.reina.fechaCaptura : ""}">
+value="${editando && colonia.reina.fechaCaptura ? Storage.convertirFechaaISO(colonia.reina.fechaCaptura) : ""}">
 
 <br><br>
 
@@ -230,13 +226,10 @@ document
 .getElementById("especieNuevaColonia")
 .value;
 
-const fecha =
+const fechaISO =
 document
 .getElementById("fechaNuevaColonia")
-.value.trim();
-
-const formato =
-/^\d{2}\/\d{2}\/\d{4}$/;
+.value;
 
 if(nombre===""){
 
@@ -246,13 +239,16 @@ return;
 
 }
 
-if(!formato.test(fecha)){
+if(fechaISO===""){
 
-alert("La fecha debe tener formato dd/mm/aaaa");
+alert("Selecciona una fecha de captura.");
 
 return;
 
 }
+
+const fecha = Storage.convertirISOaFecha(fechaISO);
+
 if(editando){
 
     colonia.nombre = nombre;

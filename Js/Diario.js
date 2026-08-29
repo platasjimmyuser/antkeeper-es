@@ -2,10 +2,11 @@ window.mostrarFormularioDiario = function(colonia){
 
     const hoy = new Date();
 
-    const fechaHoy =
-        String(hoy.getDate()).padStart(2,"0") + "/" +
-        String(hoy.getMonth()+1).padStart(2,"0") + "/" +
-        hoy.getFullYear();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth()+1).padStart(2,"0");
+    const dia = String(hoy.getDate()).padStart(2,"0");
+
+    const fechaHoyISO = anio + "-" + mes + "-" + dia;
 
 
     document.getElementById("app").innerHTML = `
@@ -30,7 +31,7 @@ window.mostrarFormularioDiario = function(colonia){
 
         <label>📅 Fecha</label>
         <br>
-        <input type="text" id="fechaDiario" maxlength="10" value="${fechaHoy}">
+        <input type="date" id="fechaDiario" value="${fechaHoyISO}">
 
         <br><br>
 
@@ -76,8 +77,8 @@ window.mostrarFormularioDiario = function(colonia){
     .getElementById("guardarDiario")
     .onclick = ()=>{
 
-        const fecha =
-            document.getElementById("fechaDiario").value.trim();
+        const fechaISO =
+            document.getElementById("fechaDiario").value;
 
         const titulo =
             document.getElementById("tituloDiario").value.trim();
@@ -85,11 +86,9 @@ window.mostrarFormularioDiario = function(colonia){
         const texto =
             document.getElementById("textoDiario").value.trim();
 
-        const formato = /^\d{2}\/\d{2}\/\d{4}$/;
+        if(fechaISO === ""){
 
-        if(!formato.test(fecha)){
-
-            alert("La fecha debe tener formato dd/mm/aaaa");
+            alert("Selecciona una fecha.");
 
             return;
 
@@ -102,6 +101,8 @@ window.mostrarFormularioDiario = function(colonia){
             return;
 
         }
+
+        const fecha = Storage.convertirISOaFecha(fechaISO);
 
         Storage.agregarEntradaDiario(colonia.id, {
 
