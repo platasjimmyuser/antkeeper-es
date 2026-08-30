@@ -201,7 +201,7 @@ ${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
 
 
 
-    <section class="tarjeta grupo-desplegables">
+    <section class="grupo-desplegables">
 
 
         <details>
