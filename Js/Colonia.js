@@ -16,16 +16,7 @@ window.mostrarColonia = function(colonia){
 
     document.getElementById("app").innerHTML = `
 
-<section class="tarjeta">
-
-<button id="btnVolverColonias">
-
-⬅️ Volver a colonias
-
-</button>
-
-</section>
-    <section class="tarjeta">
+    <section class="tarjeta cabecera-colonia">
 
 
         <img
@@ -35,39 +26,41 @@ window.mostrarColonia = function(colonia){
         class="foto-colonia">
 
 
+        <div class="info-colonia">
 
-        <h2>🐜 ${colonia.nombre}</h2>
+            <h2>🐜 ${colonia.nombre}</h2>
 
-<p>
-<strong>
-${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
-</strong>
-</p>
+            <p>
+            <strong>
+            ${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
+            </strong>
+            </p>
 
-        <p>
+            <p>
 
-        <strong>${colonia.reina.estado}</strong>
+            <strong>${colonia.reina.estado}</strong>
 
-        </p>
-
-
-
-        <p>
-
-        🧬 ${colonia.especie}
-
-        </p>
+            </p>
 
 
 
-        <p>
+            <p>
 
-        📅 Captura:
+            🧬 ${colonia.especie}
 
-        ${colonia.reina.fechaCaptura}
+            </p>
 
-        </p>
 
+
+            <p>
+
+            📅 Captura:
+
+            ${colonia.reina.fechaCaptura}
+
+            </p>
+
+        </div>
 
 
     </section>
@@ -181,7 +174,7 @@ ${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
             </button>
 
 
-            <button id="btnArchivar" class="boton-accion">
+            <button id="btnArchivar" class="boton-accion" style="background:#E8791E;color:white">
                 <span class="icono-accion">${colonia.archivada ? "♻️" : "📦"}</span>
                 <span class="etiqueta-accion">${colonia.archivada ? "Restaurar" : "Archivar"}</span>
             </button>
@@ -417,14 +410,6 @@ ${colonia.archivada ? "📦 Colonia archivada" : "🟢 Colonia activa"}
 
 
     `;
-
-document
-.getElementById("btnVolverColonias")
-.onclick = ()=>{
-
-    mostrarListaColonias();
-
-};
 
 
 
