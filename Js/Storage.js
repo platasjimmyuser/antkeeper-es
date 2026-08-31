@@ -491,6 +491,7 @@ borrarTodo() {
 
 },
 
+
 // ==========================================
 // RECORDAR ÚLTIMA PANTALLA (sobrevive al refresco)
 // ==========================================
@@ -532,6 +533,8 @@ obtenerUltimaPantalla() {
     }
 
 },
+
+
 // ==========================================
 // CONVERSIÓN DE FECHAS (calendario nativo)
 // ==========================================
@@ -633,7 +636,8 @@ calcularAvisosMantenimiento(colonia) {
             coloniaId: colonia.id,
             colonia: colonia.nombre,
             nivel: "🔍",
-            texto: "Llevan " + diasRevision + " días sin revisión."
+            texto: "Llevan " + diasRevision + " días sin revisión.",
+            tipo: "revision"
         });
 
     }
@@ -648,7 +652,8 @@ calcularAvisosMantenimiento(colonia) {
             coloniaId: colonia.id,
             colonia: colonia.nombre,
             nivel: "🍽",
-            texto: "Llevan " + diasAlimentacion + " días sin alimentar."
+            texto: "Llevan " + diasAlimentacion + " días sin alimentar.",
+            tipo: "alimentacion"
         });
 
     }
@@ -663,7 +668,8 @@ calcularAvisosMantenimiento(colonia) {
             coloniaId: colonia.id,
             colonia: colonia.nombre,
             nivel: "💧",
-            texto: "Llevan " + diasAgua + " días sin agua."
+            texto: "Llevan " + diasAgua + " días sin agua.",
+            tipo: "agua"
         });
 
     }
@@ -675,7 +681,7 @@ calcularAvisosMantenimiento(colonia) {
 
 
 // ==========================================
-// OBTENER AVISOS
+// OBTENER AVISOS (TODAS LAS COLONIAS)
 // ==========================================
 
 obtenerAvisos() {
@@ -719,7 +725,11 @@ obtenerAvisos() {
 
                     nivel: "🚨",
 
-                    texto: aviso
+                    texto: aviso,
+
+                    tipo: "manual",
+
+                    indice: indice
 
                 });
 
@@ -753,7 +763,11 @@ obtenerAvisos() {
 
                     texto:
                         aviso.texto ||
-                        ""
+                        "",
+
+                    tipo: "manual",
+
+                    indice: indice
 
                 });
 
@@ -765,6 +779,86 @@ obtenerAvisos() {
 
 
     return avisos;
+
+},
+
+
+// ==========================================
+// OBTENER AVISOS DE UNA SOLA COLONIA
+// ==========================================
+
+obtenerAvisosColonia(id) {
+
+    const colonia = this.obtenerColoniaPorId(id);
+
+    if (!colonia) {
+        return [];
+    }
+
+    const avisos = [];
+
+    this.calcularAvisosMantenimiento(colonia)
+    .forEach(aviso => avisos.push(aviso));
+
+    if (Array.isArray(colonia.avisos)) {
+
+        colonia.avisos.forEach((aviso, indice) => {
+
+            if (typeof aviso === "string") {
+
+                avisos.push({
+                    id: colonia.id + "-aviso-" + indice,
+                    coloniaId: colonia.id,
+                    colonia: colonia.nombre,
+                    nivel: "🚨",
+                    texto: aviso,
+                    tipo: "manual",
+                    indice: indice
+                });
+
+                return;
+            }
+
+            if (aviso && aviso.activo !== false) {
+
+                avisos.push({
+                    id: aviso.id || colonia.id + "-aviso-" + indice,
+                    coloniaId: colonia.id,
+                    colonia: colonia.nombre,
+                    nivel: aviso.nivel || "🚨",
+                    texto: aviso.texto || "",
+                    tipo: "manual",
+                    indice: indice
+                });
+
+            }
+
+        });
+
+    }
+
+    return avisos;
+
+},
+
+
+// ==========================================
+// ELIMINAR AVISO MANUAL
+// ==========================================
+
+eliminarAvisoManual(coloniaId, indice) {
+
+    const colonia = this.obtenerColoniaPorId(coloniaId);
+
+    if (!colonia || !Array.isArray(colonia.avisos)) {
+        return false;
+    }
+
+    colonia.avisos.splice(indice, 1);
+
+    this.guardar();
+
+    return true;
 
 },
 

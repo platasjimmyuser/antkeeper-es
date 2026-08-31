@@ -13,6 +13,9 @@ window.mostrarColonia = function(colonia){
     Storage.guardarUltimaPantalla("colonia", colonia.id);
 
 
+    const avisosColonia = Storage.obtenerAvisosColonia(colonia.id);
+
+
 
     document.getElementById("app").innerHTML = `
 
@@ -311,13 +314,13 @@ window.mostrarColonia = function(colonia){
 
         <details>
 
-            <summary>🚨 Avisos</summary>
+            <summary>🚨 Avisos (${avisosColonia.length})</summary>
 
             <br>
 
 
             ${
-                colonia.avisos.filter(a=>a.activo).length === 0
+                avisosColonia.length === 0
 
                 ?
 
@@ -325,16 +328,28 @@ window.mostrarColonia = function(colonia){
 
                 :
 
-                colonia.avisos
+                avisosColonia.map(aviso => `
 
-                .filter(a=>a.activo)
+                    <p
+                    class="aviso-colonia-item"
+                    data-tipo="${aviso.tipo}"
+                    data-indice="${aviso.indice !== undefined ? aviso.indice : ""}"
+                    style="cursor:pointer;text-decoration:underline;">
 
-                .map(a=>`
+                    ${aviso.nivel} ${aviso.texto}
 
-                    <p>${a.nivel} ${a.texto}</p>
+                    </p>
 
                 `).join("")
 
+            }
+
+            ${
+                avisosColonia.length > 0
+                ?
+                "<p style='font-size:12px;color:#777;'>Toca un aviso para resolverlo.</p>"
+                :
+                ""
             }
 
 
@@ -511,6 +526,58 @@ window.mostrarColonia = function(colonia){
                 Storage.establecerPortada(colonia.id, foto.imagen);
 
                 mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
+
+            }
+
+        });
+
+    });
+
+
+
+    document
+
+    .querySelectorAll(".aviso-colonia-item")
+
+    .forEach(el => {
+
+        el.addEventListener("click", () => {
+
+            const tipo = el.dataset.tipo;
+
+            if(tipo === "revision"){
+
+                mostrarRevision(colonia);
+
+                return;
+
+            }
+
+            if(tipo === "alimentacion" || tipo === "agua"){
+
+                if(typeof mostrarCuidados === "function"){
+
+                    mostrarCuidados(colonia);
+
+                }
+
+                return;
+
+            }
+
+            if(tipo === "manual"){
+
+                const indice = Number(el.dataset.indice);
+
+                if(confirm("¿Marcar este aviso como resuelto?")){
+
+                    Storage.eliminarAvisoManual(colonia.id, indice);
+
+                    mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
+
+                }
+
+                return;
 
             }
 
