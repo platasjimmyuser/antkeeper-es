@@ -364,7 +364,7 @@ button:active {
 
 
 /* =========================
-   BOTONES DE ACCIONES (OCUPAN TODA LA LÍNEA)
+   BOTONES DE ACCIONES (RESPONSIVE)
 ========================= */
 
 
@@ -373,9 +373,7 @@ button:active {
 
     display:grid;
 
-    grid-auto-flow:column;
-
-    grid-auto-columns:1fr;
+    grid-template-columns:repeat(4, 1fr);
 
     gap:8px;
 
@@ -461,7 +459,7 @@ button:active {
 
 
 /* =========================
-   GRUPO DE DESPLEGABLES (3 TARJETAS POR LÍNEA)
+   GRUPO DE DESPLEGABLES (RESPONSIVE)
 ========================= */
 
 
@@ -470,7 +468,7 @@ button:active {
 
     display:grid;
 
-    grid-template-columns:repeat(3, 1fr);
+    grid-template-columns:repeat(2, 1fr);
 
     gap:12px;
 
@@ -507,6 +505,32 @@ button:active {
     font-size:14px;
 
     list-style:revert;
+
+
+}
+
+
+
+/* =========================
+   PANTALLAS ANCHAS (TABLET Y MAYORES)
+========================= */
+
+
+@media (min-width:600px) {
+
+
+    .acciones-grid {
+
+        grid-template-columns:repeat(8, 1fr);
+
+    }
+
+
+    .grupo-desplegables {
+
+        grid-template-columns:repeat(3, 1fr);
+
+    }
 
 
 }
