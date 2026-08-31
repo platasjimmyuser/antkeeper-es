@@ -132,11 +132,11 @@ main {
 .resumen-datos {
 
 
-    display:flex;
+    display:grid;
 
-    gap:10px;
+    grid-template-columns:repeat(4, 1fr);
 
-    justify-content:space-between;
+    gap:8px;
 
 
 }
@@ -146,13 +146,13 @@ main {
 .widget-resumen {
 
 
-    flex:1;
+    min-width:0;
 
     background:#edf3e6;
 
-    border-radius:15px;
+    border-radius:12px;
 
-    padding:15px;
+    padding:10px 4px;
 
     text-align:center;
 
@@ -168,9 +168,21 @@ main {
 
     display:block;
 
-    font-size:28px;
+    font-size:clamp(13px, 5.5vw, 28px);
 
     color:#5A6B3C;
+
+    overflow-wrap:break-word;
+
+
+}
+
+
+
+.widget-resumen span {
+
+
+    font-size:clamp(10px, 3vw, 14px);
 
 
 }
