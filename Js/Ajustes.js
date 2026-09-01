@@ -1,5 +1,5 @@
 window.mostrarPantallaAjustes = function(){
-Storage.guardarUltimaPantalla("ajustes");
+
     document.getElementById("app").innerHTML = `
 
     <section class="tarjeta">
@@ -123,8 +123,6 @@ Storage.guardarUltimaPantalla("ajustes");
         <p>🐜 AntKeeper ES</p>
 
         <p>Versión 1.0</p>
-
-        <p><a href="https://github.com/platasjimmyuser/antkeeper-es" target="_blank">Ver repositorio en GitHub</a></p>
 
     </section>
 

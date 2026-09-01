@@ -132,13 +132,27 @@ window.mostrarColonia = function(colonia){
     }
 
 
+    function contenidoContador(){
+
+        if(typeof generarPanelContador === "function"){
+
+            return generarPanelContador(colonia);
+
+        }
+
+        return "<p>🔢 Próximamente: contar hormigas en una foto con IA.</p>";
+
+    }
+
+
     const secciones = {
-        diario: { icono:"📝", etiqueta:"Diario", generar: contenidoDiario },
-        alimentacion: { icono:"🍽", etiqueta:"Alimentación", generar: contenidoAlimentacion },
-        parametros: { icono:"🌡", etiqueta:"Parámetros", generar: contenidoParametros },
-        avisos: { icono:"🚨", etiqueta:"Avisos (" + avisosColonia.length + ")", generar: contenidoAvisos },
-        galeria: { icono:"📷", etiqueta:"Galería (" + (colonia.foto.galeria ? colonia.foto.galeria.length : 0) + ")", generar: contenidoGaleria },
-        evolucion: { icono:"📈", etiqueta:"Evolución", generar: contenidoEvolucion }
+        diario: { icono:"📝", etiqueta:"Diario", generar: contenidoDiario, ancho:1 },
+        alimentacion: { icono:"🍽", etiqueta:"Alimentación", generar: contenidoAlimentacion, ancho:1 },
+        parametros: { icono:"🌡", etiqueta:"Parámetros", generar: contenidoParametros, ancho:1 },
+        avisos: { icono:"🚨", etiqueta:"Avisos (" + avisosColonia.length + ")", generar: contenidoAvisos, ancho:1 },
+        galeria: { icono:"📷", etiqueta:"Galería (" + (colonia.foto.galeria ? colonia.foto.galeria.length : 0) + ")", generar: contenidoGaleria, ancho:1 },
+        evolucion: { icono:"📈", etiqueta:"Evolución", generar: contenidoEvolucion, ancho:1 },
+        contador: { icono:"🔢", etiqueta:"Contador de hormigas", generar: contenidoContador, ancho:2 }
     };
 
 
@@ -328,7 +342,10 @@ window.mostrarColonia = function(colonia){
         ${
             Object.keys(secciones).map(clave => `
 
-                <button class="fila-desplegable" data-seccion="${clave}">
+                <button
+                class="fila-desplegable"
+                data-seccion="${clave}"
+                ${secciones[clave].ancho === 2 ? 'style="grid-column:1/-1;"' : ''}>
                     <span class="flecha-desplegable">▶</span>
                     <span>${secciones[clave].icono} ${secciones[clave].etiqueta}</span>
                 </button>
@@ -627,6 +644,13 @@ window.mostrarColonia = function(colonia){
                 });
 
             });
+
+        }
+
+
+        if(clave === "contador" && typeof activarListenersContador === "function"){
+
+            activarListenersContador(colonia);
 
         }
 
