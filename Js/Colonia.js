@@ -16,6 +16,132 @@ window.mostrarColonia = function(colonia){
     const avisosColonia = Storage.obtenerAvisosColonia(colonia.id);
 
 
+    function contenidoDiario(){
+
+        if(colonia.diario.length === 0){
+            return "<p>No hay anotaciones.</p>";
+        }
+
+        return [...colonia.diario]
+        .map((entrada, indice) => ({ entrada, indice }))
+        .sort((a, b) => {
+
+            const [diaA, mesA, anioA] = a.entrada.fecha.split("/");
+            const [diaB, mesB, anioB] = b.entrada.fecha.split("/");
+
+            const fechaA = new Date(anioA, mesA - 1, diaA);
+            const fechaB = new Date(anioB, mesB - 1, diaB);
+
+            if (fechaB - fechaA !== 0) {
+                return fechaB - fechaA;
+            }
+
+            return b.indice - a.indice;
+
+        })
+        .map(({entrada})=>`
+
+            <article>
+                <strong>${entrada.fecha}</strong>
+                <h4>${entrada.titulo}</h4>
+                <p>${entrada.texto}</p>
+            </article>
+            <hr>
+
+        `).join("");
+
+    }
+
+
+    function contenidoAlimentacion(){
+
+        return `
+            <p>Última: ${colonia.alimentacion.ultima || "--"}</p>
+            <p>${colonia.alimentacion.alimento || "Sin datos"}</p>
+        `;
+
+    }
+
+
+    function contenidoParametros(){
+
+        return `
+            <p>🌡 ${colonia.parametros.temperatura || "--"}</p>
+            <p>💧 ${colonia.parametros.humedad || "--"}</p>
+        `;
+
+    }
+
+
+    function contenidoAvisos(){
+
+        if(avisosColonia.length === 0){
+            return "<p>🟢 Sin avisos.</p>";
+        }
+
+        const items = avisosColonia.map(aviso => `
+
+            <p
+            class="aviso-colonia-item"
+            data-tipo="${aviso.tipo}"
+            data-indice="${aviso.indice !== undefined ? aviso.indice : ""}"
+            style="cursor:pointer;text-decoration:underline;">
+
+            ${aviso.nivel} ${aviso.texto}
+
+            </p>
+
+        `).join("");
+
+        return items + "<p style='font-size:12px;color:#777;'>Toca un aviso para resolverlo.</p>";
+
+    }
+
+
+    function contenidoGaleria(){
+
+        return `
+            <p style="font-size:12px;color:#777;">Toca una foto para ponerla como portada.</p>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            ${
+                (!colonia.foto.galeria || colonia.foto.galeria.length === 0)
+                ?
+                `<img src="${colonia.foto.portada}" style="grid-column:1/-1;width:100%;border-radius:8px;">`
+                :
+                colonia.foto.galeria
+                .map((foto, indice) => `
+                    <img
+                    src="${foto.imagen}"
+                    data-indice="${indice}"
+                    class="foto-galeria"
+                    style="width:100%;border-radius:8px;cursor:pointer;">
+                `).join("")
+            }
+            </div>
+        `;
+
+    }
+
+
+    function contenidoEvolucion(){
+
+        return typeof generarGraficaEvolucion === "function"
+            ? generarGraficaEvolucion(colonia.revisiones)
+            : "<p>Gráfica no disponible.</p>";
+
+    }
+
+
+    const secciones = {
+        diario: { icono:"📝", etiqueta:"Diario", generar: contenidoDiario },
+        alimentacion: { icono:"🍽", etiqueta:"Alimentación", generar: contenidoAlimentacion },
+        parametros: { icono:"🌡", etiqueta:"Parámetros", generar: contenidoParametros },
+        avisos: { icono:"🚨", etiqueta:"Avisos (" + avisosColonia.length + ")", generar: contenidoAvisos },
+        galeria: { icono:"📷", etiqueta:"Galería (" + (colonia.foto.galeria ? colonia.foto.galeria.length : 0) + ")", generar: contenidoGaleria },
+        evolucion: { icono:"📈", etiqueta:"Evolución", generar: contenidoEvolucion }
+    };
+
+
 
     document.getElementById("app").innerHTML = `
 
@@ -199,228 +325,21 @@ window.mostrarColonia = function(colonia){
 
     <section class="grupo-desplegables">
 
-
-        <details>
-
-            <summary>📝 Diario</summary>
-
-            <br>
-
-
-            ${
-        colonia.diario.length === 0
-
-        ?
-
-        "<p>No hay anotaciones.</p>"
-
-        :
-
-        [...colonia.diario]
-
-        .map((entrada, indice) => ({ entrada, indice }))
-
-        .sort((a, b) => {
-
-            const [diaA, mesA, anioA] = a.entrada.fecha.split("/");
-            const [diaB, mesB, anioB] = b.entrada.fecha.split("/");
-
-            const fechaA = new Date(anioA, mesA - 1, diaA);
-            const fechaB = new Date(anioB, mesB - 1, diaB);
-
-            if (fechaB - fechaA !== 0) {
-                return fechaB - fechaA;
-            }
-
-            return b.indice - a.indice;
-
-        })
-
-        .map(({entrada})=>`
-
-                    <article>
-
-                        <strong>${entrada.fecha}</strong>
-
-                        <h4>${entrada.titulo}</h4>
-
-                        <p>${entrada.texto}</p>
-
-                    </article>
-
-                    <hr>
-
-
-                `).join("")
-
-            }
-
-
-        </details>
-
-
-
-        <details>
-
-            <summary>🍽 Alimentación</summary>
-
-            <br>
-
-
-            <p>
-
-            Última:
-
-            ${colonia.alimentacion.ultima || "--"}
-
-            </p>
-
-
-            <p>
-
-            ${colonia.alimentacion.alimento || "Sin datos"}
-
-            </p>
-
-
-        </details>
-
-
-
-        <details>
-
-            <summary>🌡 Parámetros</summary>
-
-            <br>
-
-
-            <p>
-
-            🌡 ${colonia.parametros.temperatura || "--"}
-
-            </p>
-
-
-            <p>
-
-            💧 ${colonia.parametros.humedad || "--"}
-
-            </p>
-
-
-        </details>
-
-
-
-        <details>
-
-            <summary>🚨 Avisos (${avisosColonia.length})</summary>
-
-            <br>
-
-
-            ${
-                avisosColonia.length === 0
-
-                ?
-
-                "<p>🟢 Sin avisos.</p>"
-
-                :
-
-                avisosColonia.map(aviso => `
-
-                    <p
-                    class="aviso-colonia-item"
-                    data-tipo="${aviso.tipo}"
-                    data-indice="${aviso.indice !== undefined ? aviso.indice : ""}"
-                    style="cursor:pointer;text-decoration:underline;">
-
-                    ${aviso.nivel} ${aviso.texto}
-
-                    </p>
-
-                `).join("")
-
-            }
-
-            ${
-                avisosColonia.length > 0
-                ?
-                "<p style='font-size:12px;color:#777;'>Toca un aviso para resolverlo.</p>"
-                :
-                ""
-            }
-
-
-        </details>
-
-
-
-        <details>
-
-            <summary>📷 Galería (${colonia.foto.galeria ? colonia.foto.galeria.length : 0})</summary>
-
-            <br>
-
-            <p style="font-size:12px;color:#777;">Toca una foto para ponerla como portada.</p>
-
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-
-            ${
-                (!colonia.foto.galeria || colonia.foto.galeria.length === 0)
-
-                ?
-
-                `<img src="${colonia.foto.portada}" style="grid-column:1/-1;width:100%;border-radius:8px;">`
-
-                :
-
-                colonia.foto.galeria
-
-                .map((foto, indice) => `
-
-                    <img
-                    src="${foto.imagen}"
-                    data-indice="${indice}"
-                    class="foto-galeria"
-                    style="width:100%;border-radius:8px;cursor:pointer;">
-
-                `).join("")
-
-            }
-
-            </div>
-
-        </details>
-
-
-
-        <details>
-
-            <summary>📈 Evolución</summary>
-
-            <br>
-
-
-            ${
-                typeof generarGraficaEvolucion === "function"
-
-                ?
-
-                generarGraficaEvolucion(colonia.revisiones)
-
-                :
-
-                "<p>Gráfica no disponible.</p>"
-
-            }
-
-
-        </details>
-
+        ${
+            Object.keys(secciones).map(clave => `
+
+                <button class="fila-desplegable" data-seccion="${clave}">
+                    <span class="flecha-desplegable">▶</span>
+                    <span>${secciones[clave].icono} ${secciones[clave].etiqueta}</span>
+                </button>
+
+            `).join("")
+        }
 
     </section>
+
+
+    <div id="contenidoDesplegableWrap"></div>
 
 
 
@@ -506,84 +425,6 @@ window.mostrarColonia = function(colonia){
         });
 
     };
-
-
-
-    document
-
-    .querySelectorAll(".foto-galeria")
-
-    .forEach(img=>{
-
-        img.addEventListener("click", ()=>{
-
-            const indice = img.dataset.indice;
-
-            const foto = colonia.foto.galeria[indice];
-
-            if(confirm("¿Poner esta foto como portada de la colonia?")){
-
-                Storage.establecerPortada(colonia.id, foto.imagen);
-
-                mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
-
-            }
-
-        });
-
-    });
-
-
-
-    document
-
-    .querySelectorAll(".aviso-colonia-item")
-
-    .forEach(el => {
-
-        el.addEventListener("click", () => {
-
-            const tipo = el.dataset.tipo;
-
-            if(tipo === "revision"){
-
-                mostrarRevision(colonia);
-
-                return;
-
-            }
-
-            if(tipo === "alimentacion" || tipo === "agua"){
-
-                if(typeof mostrarCuidados === "function"){
-
-                    mostrarCuidados(colonia);
-
-                }
-
-                return;
-
-            }
-
-            if(tipo === "manual"){
-
-                const indice = Number(el.dataset.indice);
-
-                if(confirm("¿Marcar este aviso como resuelto?")){
-
-                    Storage.eliminarAvisoManual(colonia.id, indice);
-
-                    mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
-
-                }
-
-                return;
-
-            }
-
-        });
-
-    });
 
 
 
@@ -695,6 +536,163 @@ window.mostrarColonia = function(colonia){
 
 
     };
+
+
+
+    let seccionAbierta = null;
+
+
+    function activarListenersContenido(clave){
+
+        const contenedor = document.getElementById("contenidoDesplegableWrap");
+
+
+        if(clave === "galeria"){
+
+            contenedor
+
+            .querySelectorAll(".foto-galeria")
+
+            .forEach(img=>{
+
+                img.addEventListener("click", ()=>{
+
+                    const indice = img.dataset.indice;
+
+                    const foto = colonia.foto.galeria[indice];
+
+                    if(confirm("¿Poner esta foto como portada de la colonia?")){
+
+                        Storage.establecerPortada(colonia.id, foto.imagen);
+
+                        mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
+
+                    }
+
+                });
+
+            });
+
+        }
+
+
+        if(clave === "avisos"){
+
+            contenedor
+
+            .querySelectorAll(".aviso-colonia-item")
+
+            .forEach(el => {
+
+                el.addEventListener("click", () => {
+
+                    const tipo = el.dataset.tipo;
+
+                    if(tipo === "revision"){
+
+                        mostrarRevision(colonia);
+
+                        return;
+
+                    }
+
+                    if(tipo === "alimentacion" || tipo === "agua"){
+
+                        if(typeof mostrarCuidados === "function"){
+
+                            mostrarCuidados(colonia);
+
+                        }
+
+                        return;
+
+                    }
+
+                    if(tipo === "manual"){
+
+                        const indice = Number(el.dataset.indice);
+
+                        if(confirm("¿Marcar este aviso como resuelto?")){
+
+                            Storage.eliminarAvisoManual(colonia.id, indice);
+
+                            mostrarColonia(Storage.obtenerColoniaPorId(colonia.id));
+
+                        }
+
+                        return;
+
+                    }
+
+                });
+
+            });
+
+        }
+
+    }
+
+
+
+    document
+
+    .querySelectorAll(".fila-desplegable")
+
+    .forEach(boton => {
+
+        boton.addEventListener("click", () => {
+
+            const clave = boton.dataset.seccion;
+
+            const wrap = document.getElementById("contenidoDesplegableWrap");
+
+
+            if(seccionAbierta === clave){
+
+                wrap.innerHTML = "";
+
+                boton.classList.remove("activo");
+
+                boton.querySelector(".flecha-desplegable").textContent = "▶";
+
+                seccionAbierta = null;
+
+                return;
+
+            }
+
+
+            document
+
+            .querySelectorAll(".fila-desplegable")
+
+            .forEach(b => {
+
+                b.classList.remove("activo");
+
+                b.querySelector(".flecha-desplegable").textContent = "▶";
+
+            });
+
+
+            boton.classList.add("activo");
+
+            boton.querySelector(".flecha-desplegable").textContent = "▼";
+
+
+            wrap.innerHTML = `<section class="tarjeta">${secciones[clave].generar()}</section>`;
+
+            seccionAbierta = clave;
+
+
+            activarListenersContenido(clave);
+
+
+            wrap.scrollIntoView({ behavior:"smooth", block:"nearest" });
+
+        });
+
+    });
 
 
 
